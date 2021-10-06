@@ -30,12 +30,7 @@ int main(void)
     MAP_WDT_A_holdTimer();
 
     setMotorPorts();
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-
+    startMoving();
     setS1S2Interrupt();
     generatePWN();
 
@@ -45,13 +40,13 @@ int main(void)
     }
 }
 
-/* Port1 ISR - This ISR will progressively step up the duty cycle of the PWM on a button press */
+/* Port1 ISR */
 void PORT1_IRQHandler(void)
 {
     uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, status);
 
-    if (status & GPIO_PIN1) //S1 interrupt
+    if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
         if(pwmConfig1.dutyCycle == 9000 || pwmConfig2.dutyCycle == 9000)
             pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
@@ -63,8 +58,15 @@ void PORT1_IRQHandler(void)
 
         generatePWN();
     }
-    if (status & GPIO_PIN4) //S2 interrupt
+    if (status & GPIO_PIN4) //S2
     {
-        changeDirection();
+        if(!rotating)
+            rotateCarLeft();
+        else
+        {
+            rotating = false;
+            resetPWN();
+        }
+        generatePWN();
     }
 }

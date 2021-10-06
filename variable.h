@@ -24,6 +24,8 @@ Timer_A_PWMConfig pwmConfig2 =
         1000
 };
 
+bool rotating = false;
+
 void setMotorPorts(){
     //motor A
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN4);
@@ -61,6 +63,13 @@ void generatePWN(){
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
 }
 
+void startMoving(){
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+}
+
 void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
@@ -68,3 +77,18 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 }
 
+void rotateCarLeft(){
+    pwmConfig1.dutyCycle = 1000;
+    pwmConfig2.dutyCycle = 5000;
+    rotating = true;
+}
+
+void rotateCarRight(){
+    pwmConfig2.dutyCycle = 1000;
+    pwmConfig1.dutyCycle = 5000;
+    rotating = true;
+}
+
+void resetPWN(){
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
+}
