@@ -94,6 +94,7 @@ bool resetPWN(){
     return false;
 }
 
-void zeroPWN(){
+bool zeroPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
+    return false;
 }

@@ -55,7 +55,7 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN4) //S2
     {
-        rotating = rotating? resetPWN() : rotateCarLeft();
+        rotating = rotating? zeroPWN() : rotateCarLeft();
     }
     generatePWN();
 }
