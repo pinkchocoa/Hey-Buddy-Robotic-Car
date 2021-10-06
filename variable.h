@@ -48,6 +48,11 @@ void setS1S2Interrupt(){
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN4);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN4);
     GPIO_enableInterrupt(GPIO_PORT_P1, GPIO_PIN4);
+
+    /* Enabling interrupts and starting the watchdog timer */
+    Interrupt_enableInterrupt(INT_PORT1);
+    Interrupt_enableSleepOnIsrExit();
+    Interrupt_enableMaster();
 }
 
 void generatePWN(){
@@ -55,3 +60,11 @@ void generatePWN(){
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
 }
+
+void changeDirection(){
+    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
+    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
+}
+

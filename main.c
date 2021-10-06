@@ -39,11 +39,6 @@ int main(void)
     setS1S2Interrupt();
     generatePWN();
 
-    /* Enabling interrupts and starting the watchdog timer */
-        Interrupt_enableInterrupt(INT_PORT1);
-        Interrupt_enableSleepOnIsrExit();
-        Interrupt_enableMaster();
-
     while (1)
     {
         PCM_gotoLPM0();
@@ -58,23 +53,18 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN1) //S1 interrupt
     {
-        if(pwmConfig1.dutyCycle == 9000)
-            pwmConfig1.dutyCycle = 1000;
+        if(pwmConfig1.dutyCycle == 9000 || pwmConfig2.dutyCycle == 9000)
+            pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
         else
+        {
             pwmConfig1.dutyCycle += 1000;
-
-        if(pwmConfig2.dutyCycle == 9000)
-            pwmConfig2.dutyCycle = 1000;
-        else
             pwmConfig2.dutyCycle += 1000;
+        }
 
         generatePWN();
     }
     if (status & GPIO_PIN4) //S2 interrupt
     {
-        GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
-        GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
-        GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
-        GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
+        changeDirection();
     }
 }
