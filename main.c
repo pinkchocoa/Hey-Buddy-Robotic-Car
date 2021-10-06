@@ -22,7 +22,7 @@
  *******************************************************************************/
 /* DriverLib Includes */
 
-#include "variable.h"
+#include "movement.h"
 
 int main(void)
 {
@@ -45,7 +45,6 @@ void PORT1_IRQHandler(void)
 {
     uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, status);
-
 
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
