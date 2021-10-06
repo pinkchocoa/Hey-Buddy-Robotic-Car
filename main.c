@@ -12,8 +12,8 @@
  *             ------------------
  *         /|\|                  |
  *          | |                  |
- *          --|RST         P1.1  |<--Toggle Switch
- *            |            P1.4  |<--Toggle Switch
+ *          --|RST         P1.1  |<--Toggle Switch - increase speed
+ *            |            P1.4  |<--Toggle Switch - turn the car / stop the car
  *            |                  |
  *            |            P2.4  |--> Output PWM
  *            |            P2.5  |--> Output PWN
