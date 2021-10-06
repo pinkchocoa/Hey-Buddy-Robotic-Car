@@ -39,6 +39,11 @@ int main(void)
     setS1S2Interrupt();
     generatePWN();
 
+    /* Enabling interrupts and starting the watchdog timer */
+        Interrupt_enableInterrupt(INT_PORT1);
+        Interrupt_enableSleepOnIsrExit();
+        Interrupt_enableMaster();
+
     while (1)
     {
         PCM_gotoLPM0();
@@ -63,7 +68,7 @@ void PORT1_IRQHandler(void)
         else
             pwmConfig2.dutyCycle += 1000;
 
-        generatePWN()
+        generatePWN();
     }
     if (status & GPIO_PIN4) //S2 interrupt
     {

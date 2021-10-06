@@ -47,12 +47,7 @@ void setS1S2Interrupt(){
     
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN4);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN4);
-    GPIO_enableInterrupt(GPIO_PORT_P1, GPIO_PIN4)
-    
-    /* Enabling interrupts and starting the watchdog timer */
-    Interrupt_enableInterrupt(INT_PORT1);
-    Interrupt_enableSleepOnIsrExit();
-    Interrupt_enableMaster();
+    GPIO_enableInterrupt(GPIO_PORT_P1, GPIO_PIN4);
 }
 
 void generatePWN(){
