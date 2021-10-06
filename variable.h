@@ -77,18 +77,23 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 }
 
-void rotateCarLeft(){
+bool rotateCarLeft(){
     pwmConfig1.dutyCycle = 1000;
     pwmConfig2.dutyCycle = 5000;
-    rotating = true;
+    return true;
 }
 
-void rotateCarRight(){
+bool rotateCarRight(){
     pwmConfig2.dutyCycle = 1000;
     pwmConfig1.dutyCycle = 5000;
-    rotating = true;
+    return true;
 }
 
-void resetPWN(){
+bool resetPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
+    return false;
+}
+
+void zeroPWN(){
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
 }

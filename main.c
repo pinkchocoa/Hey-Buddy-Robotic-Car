@@ -46,27 +46,16 @@ void PORT1_IRQHandler(void)
     uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, status);
 
+
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-        if(pwmConfig1.dutyCycle == 9000 || pwmConfig2.dutyCycle == 9000)
-            pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
-        else
-        {
-            pwmConfig1.dutyCycle += 1000;
-            pwmConfig2.dutyCycle += 1000;
-        }
-
-        generatePWN();
+        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000)? 1000 : pwmConfig1.dutyCycle + 1000;
+        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000)? 1000 : pwmConfig2.dutyCycle + 1000;
     }
+
     if (status & GPIO_PIN4) //S2
     {
-        if(!rotating)
-            rotateCarLeft();
-        else
-        {
-            rotating = false;
-            resetPWN();
-        }
-        generatePWN();
+        rotating = rotating? resetPWN() : rotateCarLeft();
     }
+    generatePWN();
 }
