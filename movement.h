@@ -63,11 +63,13 @@ void generatePWN(){
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
 }
 
-void startMoving(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
+//comments are based on the ultrasonic sensor being the front of the car
+void startMoving(){ //this one rolls backwards
+//to roll forward, set the opposite
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
 }
 
 void changeDirection(){
@@ -77,15 +79,15 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 }
 
-bool rotateCarLeft(){
-    pwmConfig1.dutyCycle = 1000;
-    pwmConfig2.dutyCycle = 5000;
+bool rotateCarRight(){ //this one is turn right
+    pwmConfig1.dutyCycle = 1000; //set left wheel slower
+    pwmConfig2.dutyCycle = 5000; //set right wheel faster
     return true;
 }
 
-bool rotateCarRight(){
-    pwmConfig2.dutyCycle = 1000;
-    pwmConfig1.dutyCycle = 5000;
+bool rotateCarLeft(){ //this one is turn left
+    pwmConfig2.dutyCycle = 1000; //set right wheel slower
+    pwmConfig1.dutyCycle = 5000; //set left wheel faster
     return true;
 }
 
