@@ -22,3 +22,6 @@ GPIO 15: level=1 fsel=4 alt=0 func=RXD0 pull=UP
 
 $ dmesg | grep tty
 look for "serial" thats the port to be used
+
+remember to plug ground!
+
