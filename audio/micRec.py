@@ -9,10 +9,10 @@ def micRec(timeOut):
             # instead of `r.recognize_google(audio)`
             return r.recognize_google(audio)
         except sr.UnknownValueError:
-            # "Failed to recognise audio"
+            return "Failed to recognise audio"
             return None
         except sr.RequestError as e:
-            # "Google request failed"
+            return "Google request failed"
             return None
 
     # obtain audio from the microphone
@@ -23,3 +23,4 @@ def micRec(timeOut):
     	audio = r.listen(source, phrase_time_limit=timeOut)
     return googleRec(audio)
 
+print(micRec(5))

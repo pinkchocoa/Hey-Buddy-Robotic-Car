@@ -35,7 +35,8 @@ $ sudo apt-get install flac
 
 2. how to use
 "import micRec from micRec.py"
-"micRec()"
+"micRec(x)"
+where x is # of seconds
 
 function returns what it heard
 
