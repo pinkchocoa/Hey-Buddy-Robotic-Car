@@ -4,31 +4,28 @@ import time
 import signal
 import speech_recognition as sr
 
-def recordSound(output, duration, path="~/"):
-
+def recordSound(output, duration, path=""):
 	def stopRec(p, duration):
 		time.sleep(duration)
 		print("stop recording pid: " + str(p.pid))
-		os.killpg(p.pid, signal.SIGTERM)
 		p.terminate()
 		p = None
 
-	record = 'arecord --format=S16_LE --rate=16000 --file-type=wav '
+	record = 'arecord -d ' + str(duration) +' -r 22050 '
 	record += path + output + '.wav'
 
 	p = subprocess.Popen(record, shell=True, preexec_fn=os.setsid)
 	print("startRecordingArecord()> p pid= " + str(p.pid))
 	print("startRecordingArecord()> recording started")
+	print("command ran: " + str(record))
 	stopRec(p, duration)
 
-def playSound(input, path="~/"):
+def playSound(input, path=""):
 	arg = 'aplay ' + path + input + '.wav'
 	print("playing: " + arg)
 	subprocess.call(arg, shell=True)
 
-def transribeSound(input, path="/home/pi/"):
-	#to be done
-	#audioFile = os.path.join(path+input+'.wav')
+def transribeSound(input, path=""):
 	audioFile = path + input + '.wav'
 	print(audioFile)
 	r = sr.Recognizer()
@@ -38,12 +35,13 @@ def transribeSound(input, path="/home/pi/"):
 		txt =  r.recognize_google(audio)
 		txt = txt.replace("'", "")
 		txt = txt.replace('"', '')
+		print("test" + txt)
 		return txt
 	except sr.UnknownValueError:
-		return " " #cannot understand audio ):
+		return "cannot understand" #cannot understand audio ):
 	except sr.RequestError as e:
-		return " " #request error
+		return "request error" #request error
 	return "hello world"
 
-#recordSound('out', 5)
-#print(transribeSound('out'))
+recordSound('out', 5)
+print(transribeSound('out'))
