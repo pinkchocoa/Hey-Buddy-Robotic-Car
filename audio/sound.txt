@@ -1,0 +1,88 @@
+the speaker that we are using is connected to the pi via analog
+im using alsamixer that is already pre installed in our pi
+
+1. change the sound card to the analog's
+$ alsamixer
+$ f6
+$ pick analog
+
+2. the speaker volume is way too soft and u can barely hear at 100%, so lets bump it up
+(remember to do ur apt-get update/upgrade)
+(best to reboot after all these)
+$ sudo apt-get install pulseaudio pavucontrol
+$ pactl list | grep 'Sink'
+above command list ur sound interfaces, it should be '1' for your analog interface by default
+$ pactl -- set-sink-volume 1 +200%
+replace '1' with number of your choice if necessary
+
+3. test sound
+to test the sound you can play some wav files that should already exist in your pi
+$ aplay /usr/share/scratch/Media/Sounds/Vocals/Singer2.wav
+
+3.1 troubleshooting, force it to set analog as default sound card
+$ sudo nano /etc/asound.conf
+content in file:
+defaults.pcm.card 1
+defaults.ctl.card 1
+
+3.2 troubleshooting, force it to set analog as default sound card via pulseaudio
+$ pacmd set-default-sink 1
+
+3.3 troubleshooting, please sudo reboot your pi
+3.4 troubleshooting, please make sure u plug in the speaker properly
+take it out and plug it back in.
+
+4. get it to say stuff
+for this we will be using espeak
+$ sudo apt-get install espeak
+$ espeal "aaaaaa hello world" 2>/dev/null
+
+5. for usage in your own python files, add the following lines:
+"from audio/speakText import speakText"
+"speakText("what u want to say")"
+
+
+for mic input
+this is done with a USB mic
+
+1. check if ur mic is in the list
+$ arecord -l
+u want the card number and device number from the listing
+mine:
+card 2: AT2020USB [AT2020USB+], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+  
+2. edit the config file
+$ nano /home/pi/.asoundrc
+add this portion in
+pcm.mic {
+  type plug
+  slave {
+    pcm "hw:[card number],[device number]"
+  }
+}
+
+3. test by recording somethng
+$ arecord --format=S16_LE --rate=16000 --file-type=wav out.wav
+$ aplay out.wav
+
+4. for usage in your own python files, add the following lines:
+"from audio/recordSound.py import recordSound, playSound"
+"recordSound(output, duration)" where output is a string and duration is an int for seconds
+
+to do...
+how to transfer file tho
+> can we reuse FTP from assignment????
+
+mic rec
+1. installations
+$ pip3 install PyAudio
+$ pip3 install SpeechRecognition
+$ sudo apt-get install flac
+
+2. how to use
+"import micRec from micRec.py"
+"micRec()"
+function returns what it heard
+
