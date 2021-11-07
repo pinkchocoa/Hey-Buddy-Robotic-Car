@@ -1,0 +1,11 @@
+$ sudo raspi-config
+select `Interface Options`
+select `Serial Port`
+select `No` for serial port to MSP432
+
+to use PL011 UART controller, you need to disable bluetooth module
+(pins 14 and 15)
+$ sudo nano /boot/config.txt
+add "dtoverlay=disable-bt"
+$ sudo systemctl disable hciuart
+$ sudo reboot
