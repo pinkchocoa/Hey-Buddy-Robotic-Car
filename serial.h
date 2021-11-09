@@ -31,6 +31,7 @@ void initUART()
     CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_12);
     UART_initModule(EUSCI_A2_BASE, &uartConfig);
     UART_enableModule(EUSCI_A2_BASE);
+    UART_enableInterrupt(EUSCI_A2_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
     Interrupt_enableInterrupt(INT_EUSCIA2);
     Interrupt_enableMaster();
 }
