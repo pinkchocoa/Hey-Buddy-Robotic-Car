@@ -40,12 +40,14 @@ int main(void)
     setMotorPorts();
     startMoving();
     setS1S2Interrupt();
+    initUART();
     generatePWN();
+    
 
     uPrintf("Going to Sleep\n\r");
     while (1)
     {
-        PCM_gotoLPM0();
+        PCM_gotoLPM3InterruptSafe();
     }
 }
 

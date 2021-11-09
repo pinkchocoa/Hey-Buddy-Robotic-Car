@@ -25,3 +25,12 @@ void uPrintf(unsigned char * TxArray)
     }
 }
 
+void initUART()
+{
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P3, GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
+    CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_12);
+    UART_initModule(EUSCI_A2_BASE, &uartConfig);
+    UART_enableModule(EUSCI_A2_BASE);
+    Interrupt_enableInterrupt(INT_EUSCIA2);
+    Interrupt_enableMaster();
+}

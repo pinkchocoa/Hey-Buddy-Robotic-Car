@@ -11,12 +11,12 @@ serialMsg = {
 }
 
 saidMsg = {
-    "on led" : ['turn', 'on'],
-    "off led" : ['turn', 'off'],
-    "forward" : ['move', 'forward'],
-    "back" : ['move', 'back'],
-    "left" : ['move', 'left'],
-    "right" : ['move', 'right'],
+    "on led" : ['', 'on'],
+    "off led" : ['', 'off'],
+    "forward" : ['', 'forward'],
+    "back" : ['', 'back'],
+    "left" : ['', 'left'],
+    "right" : ['', 'right'],
 }
 
 def checkInput(said, inputs):
