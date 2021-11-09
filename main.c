@@ -23,6 +23,14 @@
 /* DriverLib Includes */
 
 #include "movement.h"
+#include "serial.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+#define FORWARD 'w'
+#define LEFT 'a'
+#define RIGHT 'd'
+#define BACK 's'
 
 int main(void)
 {
@@ -34,6 +42,7 @@ int main(void)
     setS1S2Interrupt();
     generatePWN();
 
+    uPrintf("Going to Sleep\n\r");
     while (1)
     {
         PCM_gotoLPM0();
@@ -45,7 +54,7 @@ void PORT1_IRQHandler(void)
 {
     uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, status);
-
+    
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
         pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000)? 1000 : pwmConfig1.dutyCycle + 1000;
@@ -58,3 +67,35 @@ void PORT1_IRQHandler(void)
     }
     generatePWN();
 }
+
+void EUSCIA2_IRQHandler(void)
+{
+    uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A2_BASE);
+    MAP_UART_clearInterruptFlag(EUSCI_A2_BASE, status);
+    unsigned char msg = 0;
+    msg = UART_receiveData(EUSCI_A2_BASE);
+    //indicate that something was received
+    GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0); 
+    
+    switch(msg)
+    {
+        case FORWARD:
+            uPrintf("forward\n\r");
+            break;
+        case LEFT:
+            uPrintf("left\n\r");
+            break;
+        case RIGHT:
+            uPrintf("right\n\r");
+            break;
+        case BACK:
+            uPrintf("back\n\r");
+            break;
+        default:
+            UART_transmitData(EUSCI_A2_BASE, msg);
+    }
+    
+}
+
+
+

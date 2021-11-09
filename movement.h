@@ -1,3 +1,4 @@
+#pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 
 /* Timer_A PWM Configuration Parameter */

@@ -28,7 +28,8 @@ const eUSCI_UART_ConfigV1 uartConfig =
 };
 //![Simple UART Config]
 
-int main(void)
+//change this to main
+int test(void)
 {
     /* Halting WDT  */
     WDT_A_holdTimer();
