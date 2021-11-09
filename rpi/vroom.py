@@ -35,6 +35,7 @@ while(1):
     said = micRec(5)
     if said is None or not said:
         continue
+    print("you said " + said)
     for key in saidMsg:
         if checkInput(said, saidMsg[key]):
             sendToSerial(sPort, serialMsg[key])
