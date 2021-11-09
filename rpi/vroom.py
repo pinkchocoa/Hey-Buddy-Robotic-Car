@@ -2,12 +2,12 @@ from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial
 from audio.micRec import micRec
 
 serialMsg = {
-    "on led" : '1',
-    "off led" : '2',
-    "forward" : 'w',
-    "back" : 's',
-    "left" : 'a',
-    "right" : 'd',
+    "on led" : "1",
+    "off led" : "2",
+    "forward" : "w",
+    "back" : "s",
+    "left" : "a",
+    "right" : "d",
 }
 
 saidMsg = {
