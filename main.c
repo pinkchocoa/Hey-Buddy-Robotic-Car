@@ -31,11 +31,17 @@
 #define LEFT 'a'
 #define RIGHT 'd'
 #define BACK 's'
+#define ONLED2 '1'
+#define OFFLED2 '2'
+
 
 int main(void)
 {
     /* Halting the watchdog */
     MAP_WDT_A_holdTimer();
+
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);       // Configure P2.2 as output - LED2 - BLUE
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
     setMotorPorts();
     startMoving();
@@ -92,6 +98,14 @@ void EUSCIA2_IRQHandler(void)
             break;
         case BACK:
             uPrintf("back\n\r");
+            break;
+        case ONLED2:
+            uPrintf("on\n\r");
+            GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
+            break;
+        case OFFLED2:
+            uPrintf("off\n\r");
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         default:
             UART_transmitData(EUSCI_A2_BASE, msg);
