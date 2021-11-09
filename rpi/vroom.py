@@ -1,4 +1,4 @@
-from serial.serialComm import initSerial, readFromSerial, sendToSerial
+from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial
 from audio.micRec import micRec
 
 serialMsg = {
