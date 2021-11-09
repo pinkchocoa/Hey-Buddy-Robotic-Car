@@ -1,5 +1,5 @@
-from audio.micRec import micRec
 from serial.serialComm import initSerial, readFromSerial, sendToSerial
+from audio.micRec import micRec
 
 serialMsg = {
     "on led" : '1',
