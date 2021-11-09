@@ -20,6 +20,7 @@ def readFromSerial(serPort):
 
 def sendToSerial(serPort, message):
     while (1):
+        print("attempting to transmit: " + message)
         serPort.write(message.encode(encoding='UTF-8'))
         response = serPort.readlines(None)
         if response != []:
