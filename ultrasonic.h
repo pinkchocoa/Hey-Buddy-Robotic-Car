@@ -240,7 +240,9 @@ int startUltrasonicSensor(void)
         //min dis of 15cm
         if ((getHCSR04DistanceLeft() < MIN_DISTANCE))
             printf("Turn right\n");
-        if ((getHCSR04DistanceRight() < MIN_DISTANCE))
+        else if ((getHCSR04DistanceRight() < MIN_DISTANCE))
             printf("Turn left\n");
+        else
+            printf("Go straight\n");
     }
 }
