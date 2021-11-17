@@ -1,0 +1,42 @@
+for mic input
+this is done with a USB mic
+
+1. check if ur mic is in the list
+$ arecord -l
+u want the card number and device number from the listing
+mine:
+card 2: AT2020USB [AT2020USB+], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+  
+2. edit the config file
+$ nano /home/pi/.asoundrc
+add this portion in
+pcm.mic {
+  type plug
+  slave {
+    pcm "hw:[card number],[device number]"
+  }
+}
+
+3. test by recording somethng
+$ arecord --format=S16_LE --rate=16000 --file-type=wav out.wav
+$ aplay out.wav
+
+4. for usage in your own python files, add the following lines:
+"from audio/recordSound.py import recordSound, playSound"
+"recordSound(output, duration)" where output is a string and duration is an int for seconds
+
+mic rec
+1. installations
+$ pip3 install PyAudio
+$ pip3 install SpeechRecognition
+$ sudo apt-get install flac
+
+2. how to use
+"import micRec from micRec.py"
+"micRec(x)"
+where x is # of seconds
+
+function returns what it heard
+

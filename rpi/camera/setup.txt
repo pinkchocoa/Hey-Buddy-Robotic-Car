@@ -1,0 +1,20 @@
+$ sudo raspi-config
+select `Interfacing Options` > enable
+reboot
+
+following code allows you to preview the camera via vnc
+
+1 from picamera import PiCamera
+2 from time import sleep
+3
+4 camera = PiCamera()
+5 
+6 camera.start_preview()
+7 sleep(10)
+8 camera.stop_preview()
+
+run streaming_camera.py to preview it via a web page
+
+$ python3 streaming_camera.py
+go to raspberrypi.local:8000
+(replace raspberrypi.local with your pi's ip address)
