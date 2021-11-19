@@ -29,7 +29,7 @@ def checkInput(said, inputs):
     return True
 
 sPort = initSerial()
-# readFromSerial(sPort)
+readFromSerial(sPort)
 # ^ for going to sleep message, else not needed
 while(1):
     said = micRec(5)
