@@ -43,7 +43,7 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 #include "movement.h"
-#define MIN_DISTANCE    15.0f //15cm
+#define MIN_DISTANCE    30.0f //30 cm
 #define TICKPERIOD      1000
 
 int SR04IntTimesRight;
@@ -181,7 +181,7 @@ float getHCSR04DistanceRight(void)
 
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
-    printf("Right Ultrasonic Distance: %.2fcm\n", calculateddistance);
+//    printf("Right Ultrasonic Distance: %.2fcm\n", calculateddistance);
 
     return calculateddistance;
 }
@@ -234,7 +234,7 @@ float getHCSR04DistanceLeft(void)
 
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
-    printf("Left Ultrasonic Distance: %.2fcm\n", calculateddistance);
+//    printf("Left Ultrasonic Distance: %.2fcm\n", calculateddistance);
 
     return calculateddistance;
 }
@@ -295,24 +295,36 @@ float getHCSR04DistanceFront(void)
 }
 
 // -----------------------------------------------------main--------------------------------------------------------------
-int startUltrasonicSensor(void)
+float startUltrasonicSensor(void)
 {
     Initialise_HCSR04();
 
     while (1)
     {
-        Delay(3000);
+//        Delay(1000);
         getHCSR04DistanceFront();
-//        getHCSR04DistanceRight();
-//        getHCSR04DistanceLeft();
+        getHCSR04DistanceRight();
+        getHCSR04DistanceLeft();
 
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
 
-//        if ((getHCSR04DistanceLeft() < MIN_DISTANCE))
-//            printf("Turn right\n");
-//        else if ((getHCSR04DistanceRight() < MIN_DISTANCE))
-//            printf("Turn left\n");
-//        else
-//            printf("Go straight\n");
+        if ((getHCSR04DistanceLeft() <= MIN_DISTANCE)){
+            printf("Turn right\n");
+
+        }
+        if ((getHCSR04DistanceRight() <= MIN_DISTANCE)){
+            printf("Turn left\n");
+
+        }
+        if ((getHCSR04DistanceFront() <= MIN_DISTANCE)){
+            printf("Stop\n");
+            printf("Reverse\n");
+
+        }
+        else{
+            printf("Go straight\n");
+
+        }
+
     }
 }
