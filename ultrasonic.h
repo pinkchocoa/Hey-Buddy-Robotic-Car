@@ -181,7 +181,7 @@ float getHCSR04DistanceRight(void)
 
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
-//    printf("Right Ultrasonic Distance: %.2fcm\n", calculateddistance);
+    printf("Right Ultrasonic Distance: %.2fcm\n", calculateddistance);
 
     return calculateddistance;
 }
@@ -234,7 +234,7 @@ float getHCSR04DistanceLeft(void)
 
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
-//    printf("Left Ultrasonic Distance: %.2fcm\n", calculateddistance);
+    printf("Left Ultrasonic Distance: %.2fcm\n", calculateddistance);
 
     return calculateddistance;
 }
@@ -302,16 +302,16 @@ float startUltrasonicSensor(void)
     while (1)
     {
 //        Delay(1000);
-        getHCSR04DistanceFront();
-        getHCSR04DistanceRight();
-        getHCSR04DistanceLeft();
+//        getHCSR04DistanceFront();
+//        getHCSR04DistanceRight();
+//        getHCSR04DistanceLeft();
 
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
 
         if ((getHCSR04DistanceLeft() <= MIN_DISTANCE)){
             printf("Turn right\n");
-
         }
+
         if ((getHCSR04DistanceRight() <= MIN_DISTANCE)){
             printf("Turn left\n");
 
