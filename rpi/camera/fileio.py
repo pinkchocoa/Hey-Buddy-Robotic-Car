@@ -57,22 +57,22 @@ def delete_file_contents(path):
 
 
 # Read a file and convert each line to set items
-def file_to_set(file_name):
-    """! This method reads a file and convert each line to set items
+def file_to_list(file_name):
+    """! This method reads a file and convert each line to a list
     @param file_name file name
-    @return set with the file data
+    @return list with the file data
     """
-    results = set()
+    results = []
     with open(file_name, 'rt', encoding="utf-8") as f:
         for line in f:
-            results.add(line.replace('\n', '')) # remove new line character
+            results.append(line.replace('\n', ''))
     return results
 
 
 # Iterate through a set, each item will be a line in a file
-def set_to_file(links, file_name):
-    """! This method iterate through a set, each item will be a line in a file
-    @param links a set of data to be entered into the file
+def list_to_file(links, file_name):
+    """! This method iterate through a list, each item will be a line in a file
+    @param links a list of data to be entered into the file
     @param file_name file name
     """
     with open(file_name, "w", encoding="utf-8") as f: #added encoding for UnicodeEncodeError

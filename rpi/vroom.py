@@ -1,5 +1,6 @@
 from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial
 from audio.micRec import micRec
+from camera.fileio import file_to_list
 
 serialMsg = {
     "on led" : "1",
@@ -8,6 +9,7 @@ serialMsg = {
     "back" : "s",
     "left" : "a",
     "right" : "d",
+    "follow" : None,
 }
 
 saidMsg = {
@@ -17,6 +19,15 @@ saidMsg = {
     "back" : ['', 'back'],
     "left" : ['', 'left'],
     "right" : ['', 'right'],
+    "follow" : ['follow', 'me'],
+}
+
+camWidth = 640
+outputFile = "camera/coord.txt"
+direction = {
+    "left" : "l",
+    "middle" : "m",
+    "right" : "r",
 }
 
 def checkInput(said, inputs):
@@ -39,6 +50,22 @@ while(1):
     print("you said " + said)
     for key in saidMsg:
         if checkInput(said, saidMsg[key]):
-            sendToSerial(sPort, serialMsg[key])
-            break
-            
+            if serialMsg[key] is not None:
+                sendToSerial(sPort, serialMsg[key])
+                break
+            else: # function handled by raspberrypi
+                #check left/middle/right
+                data = file_to_list(outputFile)
+                print(data[0])
+                coord = float(data[0])
+                if coord < camWidth/3 :
+                    print("left")
+                    sendToSerial(sPort, direction["left"])
+                elif coord >= camWidth/3 and coord < camWidth/3*2:
+                    print("middle")
+                    sendToSerial(sPort, direction["middle"])
+                elif coord <= camWidth:
+                    print("right")
+                    sendToSerial(sPort, direction["right"])
+                
+                

@@ -2,7 +2,7 @@ import cv2
 import numpy as np 
 from picamera.array import PiRGBArray
 from picamera import PiCamera 
-from fileio import set_to_file
+from fileio import list_to_file
 
 outputFile = "coord.txt"
 camera = PiCamera()
@@ -31,7 +31,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	if coord is not None:
 		print(len(coord))
 		print(coord[int(len(coord)/2)][0][0])
-		set_to_file([coord[int(len(coord)/2)][0][0]], outputFile)
+		list_to_file([coord[int(len(coord)/2)][0][0]], outputFile)
 
 	result = cv2.bitwise_and(image	, image	, mask=mask)
 
