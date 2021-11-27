@@ -44,7 +44,7 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);       // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-    startUltrasonicSensor();
+//    startUltrasonicSensor();
     setMotorPorts();
     startMoving();
     setS1S2Interrupt();
@@ -83,7 +83,7 @@ void PORT5_IRQHandler(void)
     uint32_t status;
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
     detectright++;
-    if(detectright == 20)
+    if(detectright == 10)
     {
         ratio = detectright/detectleft;
         pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
@@ -102,7 +102,7 @@ void PORT6_IRQHandler(void)
     uint32_t status;
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
     detectleft++;
-    if(detectleft == 20)
+    if(detectleft == 10)
     {
         ratio = detectleft/detectright;
         pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
@@ -126,7 +126,9 @@ void EUSCIA2_IRQHandler(void)
     switch(msg)
     {
         case FORWARD:
+            changeDirection();
             uPrintf("forward\n\r");
+            //moves the car put a pwm code here
             break;
         case LEFT:
             uPrintf("left\n\r");
@@ -135,6 +137,7 @@ void EUSCIA2_IRQHandler(void)
             uPrintf("right\n\r");
             break;
         case BACK:
+            zeroPWN();
             uPrintf("back\n\r");
             break;
         case ONLED2:

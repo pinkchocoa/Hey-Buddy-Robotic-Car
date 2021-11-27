@@ -13,7 +13,7 @@ Timer_A_PWMConfig pwmConfig1 =
         10000,
         TIMER_A_CAPTURECOMPARE_REGISTER_1,
         TIMER_A_OUTPUTMODE_RESET_SET,
-        1000
+        3000
 };
 //this configs for timer A register 1
 //this is tied to P2.5
@@ -24,7 +24,7 @@ Timer_A_PWMConfig pwmConfig2 =
         10000,
         TIMER_A_CAPTURECOMPARE_REGISTER_2,
         TIMER_A_OUTPUTMODE_RESET_SET,
-        1000
+        3000
 };
 
 bool rotating = false;
@@ -35,8 +35,8 @@ void setMotorPorts(){
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN5);
     
     //motor B
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN2);
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN0);
     
     //ENA
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN4, GPIO_PRIMARY_MODULE_FUNCTION);
@@ -111,7 +111,7 @@ bool rotateCarRight(){
 }
 
 bool resetPWN(){
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
     return false;
 }
 
