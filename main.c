@@ -34,29 +34,32 @@
 #define BACK 's'
 #define ONLED2 '1'
 #define OFFLED2 '2'
-
+#define ONREDLED '3'
+#define OFFREDLED '4'
 
 int main(void)
 {
     /* Halting the watchdog */
     MAP_WDT_A_holdTimer();
 
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);       // Configure P2.2 as output - LED2 - BLUE
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1); // Configure P2.1 as output - LED2 - RED
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-
-    //startUltrasonicSensor();
+//    startUltraSonicSensor();
+//    initialiseUltraSensor();
     setMotorPorts();
-    startMoving();
     setS1S2Interrupt();
     initUART();
-    generatePWN();
-    
 
     uPrintf("Going to Sleep\n\r");
+
+
     while (1)
     {
-        PCM_gotoLPM3InterruptSafe();
+//        getHCSR04DistanceFront();
+
+      PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -65,17 +68,18 @@ void PORT1_IRQHandler(void)
 {
     uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, status);
-    
+
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000)? 1000 : pwmConfig1.dutyCycle + 1000;
-        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000)? 1000 : pwmConfig2.dutyCycle + 1000;
+        pwmConfig1.dutyCycle =
+                (pwmConfig1.dutyCycle == 9000) ?
+                        1000 : pwmConfig1.dutyCycle + 1000;
+        pwmConfig2.dutyCycle =
+                (pwmConfig2.dutyCycle == 9000) ?
+                        1000 : pwmConfig2.dutyCycle + 1000;
     }
 
-    if (status & GPIO_PIN4) //S2
-    {
-        rotating = rotating? zeroPWN() : rotateCarLeft();
-    }
+
     generatePWN();
 }
 
@@ -86,35 +90,42 @@ void EUSCIA0_IRQHandler(void)
     unsigned char msg = 0;
     msg = UART_receiveData(EUSCI_A0_BASE);
     //indicate that something was received
-    GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0); 
-    
-    switch(msg)
+    GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+
+    switch (msg)
     {
-        case FORWARD:
-            uPrintf("forward\n\r");
-            break;
-        case LEFT:
-            uPrintf("left\n\r");
-            break;
-        case RIGHT:
-            uPrintf("right\n\r");
-            break;
-        case BACK:
-            uPrintf("back\n\r");
-            break;
-        case ONLED2:
-            uPrintf("on\n\r");
-            GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
-            break;
-        case OFFLED2:
-            uPrintf("off\n\r");
-            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
-            break;
-        default:
-            UART_transmitData(EUSCI_A0_BASE, msg);
+    case FORWARD:
+        GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
+
+
+        uPrintf("forward\n\r");
+        break;
+    case LEFT:
+        uPrintf("left\n\r");
+        break;
+    case RIGHT:
+        uPrintf("right\n\r");
+        break;
+    case BACK:
+        uPrintf("back\n\r");
+        break;
+    case ONLED2:
+        uPrintf("on\n\r");
+        GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
+        break;
+    case OFFLED2:
+        uPrintf("off\n\r");
+        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
+        break;
+    case ONREDLED:
+        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
+        break;
+    case OFFREDLED:
+        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
+        break;
+    default:
+        UART_transmitData(EUSCI_A0_BASE, msg);
     }
-    
+
 }
-
-
 
