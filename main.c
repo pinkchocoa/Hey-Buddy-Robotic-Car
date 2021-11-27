@@ -44,6 +44,7 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);       // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
+
     startUltrasonicSensor();
     setMotorPorts();
     startMoving();
