@@ -34,8 +34,8 @@ def sendToSerial(serPort, message):
 
 # uncomment for testing
 
-ser = initSerial()
+# ser = initSerial()
 # readFromSerial(ser)
-sendToSerial(ser, 'w')
-sendToSerial(ser, '1')
-sendToSerial(ser, '2')
+# sendToSerial(ser, 'w')
+# sendToSerial(ser, '1')
+# sendToSerial(ser, '2')
