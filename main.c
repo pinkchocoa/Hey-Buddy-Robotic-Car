@@ -77,6 +77,42 @@ void PORT1_IRQHandler(void)
     }
     generatePWN();
 }
+void PORT5_IRQHandler(void)
+{
+    //FOR LEFTSIDE SLAVE ENCODER
+    uint32_t status;
+    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
+    detectright++;
+    if(detectright == 20)
+    {
+        ratio = detectright/detectleft;
+        pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
+        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
+        detectright=0;
+        detectleft=0;
+    }
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
+}
+
+
+void PORT6_IRQHandler(void)
+{
+    //FOR RIGHT SIDE SLAVE
+    uint32_t status;
+    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
+    detectleft++;
+    if(detectleft == 20)
+    {
+        ratio = detectleft/detectright;
+        pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
+        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
+        detectleft=0;
+        detectright=0;
+    }
+    GPIO_clearInterruptFlag(GPIO_PORT_P6, status);
+}
 
 void EUSCIA2_IRQHandler(void)
 {

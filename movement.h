@@ -1,6 +1,8 @@
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-
+int detectleft = 0;
+int detectright = 0;
+float ratio = 1;
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
 //this is tied to P2.4
@@ -56,6 +58,24 @@ void setS1S2Interrupt(){
     Interrupt_enableInterrupt(INT_PORT1);
     Interrupt_enableSleepOnIsrExit();
     Interrupt_enableMaster();
+}
+
+void setWheelInterupt(){
+    //declare output of encoder(inputted to msp)
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P5, GPIO_PIN5);
+
+    /* Enabling interrupts and starting the watchdog timer */
+    GPIO_clearInterruptFlag(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_enableInterrupt(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, GPIO_PIN5);
+    GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN5);
+    Interrupt_enableInterrupt(INT_PORT5);
+    Interrupt_enableInterrupt(INT_PORT6);
+    Interrupt_enableInterrupt(INT_PORT1);
+    Interrupt_enableSleepOnIsrExit();
+    Interrupt_enableMaster();
+
 }
 
 void generatePWN(){

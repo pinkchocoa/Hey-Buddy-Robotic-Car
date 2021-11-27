@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="${build_artifact:car}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="car"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:car}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="/Users/kenjileong/Desktop/EmbeddedSystem/Debug/car.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="C:\Users\Jin\Documents\GitHub\EmbeddedSystem\Debug\car.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/car"/>
 </listAttribute>
