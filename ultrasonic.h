@@ -62,7 +62,7 @@ static void Delay(int loop)
 }
 
 // ------------------------------------------------------Configure Ultrasonice sensors -------------------------------------------------------------
-void Initialise_HCSR04(void)
+void initUltraSensor(void)
 {
     /* Timer_A UpMode Configuration */
     // 1/1000000 x 1000 = 1ms
@@ -92,12 +92,12 @@ void Initialise_HCSR04(void)
     GPIO_setAsInputPinWithPullDownResistor(GPIO_PORT_P3, GPIO_PIN7);
 
     // Configuring Timer_A0 for Up Mode
-    Timer_A_configureUpMode(TIMER_A0_BASE, &upConfig);
+    Timer_A_configureUpMode(TIMER_A1_BASE, &upConfig);
 
     // Enabling interrupts and starting the timer
     Interrupt_enableInterrupt(INT_TA0_0);
 
-    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
 }
 
 // ----------------------------------------------Interrupt handler---------------------------------------------------------------------
@@ -110,7 +110,7 @@ void TA0_0_IRQHandler(void)
     SR04IntTimesFront++;
 
     /* Clear interrupt flag */
-    Timer_A_clearCaptureCompareInterrupt(TIMER_A0_BASE,
+    Timer_A_clearCaptureCompareInterrupt(TIMER_A1_BASE,
     TIMER_A_CAPTURECOMPARE_REGISTER_0);
 }
 
@@ -124,10 +124,10 @@ static int getHCSR04TimeRight(void)
     pulsetime = SR04IntTimesRight * TICKPERIOD;
 
     //if interrupt stop halfway, Timer_A_getCounterValue will get remaining ticks and add into pulse time
-    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
 
     /* Clear Timer */
-    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
 
     return pulsetime;
 }
@@ -147,21 +147,21 @@ float getHCSR04DistanceRight(void)
 
     /* Start Timer */
     SR04IntTimesRight = 0;
-    Timer_A_clearTimer(TIMER_A0_BASE);
-    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 1);
 
     /* Stop Timer */
-    Timer_A_stopTimer(TIMER_A0_BASE);
+    Timer_A_stopTimer(TIMER_A1_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeRight();
 
     /* Calculating distance in cm */
     RightCalculateDistance = (float) pulseduration / 58.0f;
-//    printf("Right Ultrasonic Distance: %.2fcm\n", calculateddistance);
+//    printf("Right Ultrasonic Distance: %.2fcm\n", RightCalculateDistance);
 
     return RightCalculateDistance;
 }
@@ -172,9 +172,9 @@ static int getHCSR04TimeLeft(void)
     int pulsetime = 0;
 
     pulsetime = SR04IntTimesLeft * TICKPERIOD;
-    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
 
-    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
 
     return pulsetime;
 }
@@ -194,22 +194,22 @@ float getHCSR04DistanceLeft(void)
 
     /* Start Timer - echo goes high - reset global var and count number of ticks*/
     SR04IntTimesLeft = 0;
-    Timer_A_clearTimer(TIMER_A0_BASE);
-    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN5) == 1)
         ;
 
     /* Stop Timer - when echo goes low*/
-    Timer_A_stopTimer(TIMER_A0_BASE);
+    Timer_A_stopTimer(TIMER_A1_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeLeft();
 
     /* Calculating distance in cm */
     LeftCalculateDistance = (float) pulseduration / 58.0f;
-//    printf("Left Ultrasonic Distance: %.2fcm\n", calculateddistance);
+//    printf("Left Ultrasonic Distance: %.2fcm\n", LeftCalculateDistance);
 
     return LeftCalculateDistance;
 }
@@ -220,9 +220,9 @@ static int getHCSR04TimeFront(void)
     int pulsetime = 0;
 
     pulsetime = SR04IntTimesFront * TICKPERIOD;
-    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
 
-    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
 
     return pulsetime;
 }
@@ -241,14 +241,14 @@ float getHCSR04DistanceFront(void)
 
     /* Start Timer - echo goes high - reset global var and count number of ticks*/
     SR04IntTimesFront = 0;
-    Timer_A_clearTimer(TIMER_A0_BASE);
-    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 1);
 
     /* Stop Timer - when echo goes low*/
-    Timer_A_stopTimer(TIMER_A0_BASE);
+    Timer_A_stopTimer(TIMER_A1_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeFront();
@@ -256,57 +256,63 @@ float getHCSR04DistanceFront(void)
     /* Calculating distance in cm */
     FrontCalculateDistance = (float) pulseduration / 58.0f;
 
-//    printf("Front Ultrasonic Distance: %.2fcm\n", calculateddistance);
+    printf("Front Ultrasonic Distance: %.2fcm\n", FrontCalculateDistance);
 
     return FrontCalculateDistance;
 }
 
 // -----------------------------------------------------main--------------------------------------------------------------
-float startUltrasonicSensor(void)
+float startUltraSonicSensor(void)
 {
-    Initialise_HCSR04();
-    setMotorPorts();
+//    initUltraSensor();
 
-    while (1)
-    {
+//    while (1)
+//    {
         //check if there is an obstacle on the left
-        if (getHCSR04DistanceFront() <= MIN_DISTANCE)
-        {
-            //go straight
-            startMoving();
-            printf("Stop\n");
-        };
+//        while (getHCSR04DistanceFront() <= MIN_DISTANCE)
+//        {
+//            startMoving();
+//            printf("Stop\n");
+//        };
 
-        //check if there is an obstacle on the left
-        if (getHCSR04DistanceLeft() <= MIN_DISTANCE)
+        bool x = true;
+        if (x == true)
         {
-            //turn right
-            rotateCarRight();
-            printf("Turn right now\n");
-        };
-
-        //check if there is an obstacle on the right
-        if (getHCSR04DistanceRight() <= MIN_DISTANCE)
-        {
-            //turn left
-            printf("Turn left now\n");
-        };
-
-        // checks if front, left, right encounter any obstacle
-        if ((getHCSR04DistanceFront() && getHCSR04DistanceLeft() && getHCSR04DistanceRight() <= MIN_DISTANCE))
-        {
-            //car stop
-            printf("Stop now\n");
-            //car reverse
-            printf("Reverse now\n");
+          startMoving();
+        }
+        else{
+            resetPWN();
         }
 
-        else
-        {
-            //move straight
-            printf("Going straight now\n");
+//        //check if there is an obstacle on the left
+//        if (getHCSR04DistanceLeft() <= MIN_DISTANCE)
+//        {
+//            //turn right
+//            printf("Turn right now\n");
+//        };
+//
+//        //check if there is an obstacle on the right
+//        if (getHCSR04DistanceRight() <= MIN_DISTANCE)
+//        {
+//            //turn left
+//            printf("Turn left now\n");
+//        };
+//
+//        // checks if front, left, right encounter any obstacle
+//        if ((getHCSR04DistanceFront() && getHCSR04DistanceLeft() && getHCSR04DistanceRight() <= MIN_DISTANCE))
+//        {
+//            //car stop
+//            printf("Stop now\n");
+//            //car reverse
+//            printf("Reverse now\n");
+//        }
+//
+//        else
+//        {
+//            //move straight
+//            printf("Going straight now\n");
+//
+//        }
 
-        }
-
-    }
+//    }
 }

@@ -21,7 +21,7 @@
  *
  *******************************************************************************/
 /* DriverLib Includes */
-
+#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "movement.h"
 #include "serial.h"
 #include "ultrasonic.h"
@@ -42,24 +42,37 @@ int main(void)
     /* Halting the watchdog */
     MAP_WDT_A_holdTimer();
 
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1); // Configure P2.1 as output - LED2 - RED
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0); // Configure P2.1 as output - LED2 - RED
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
 //    startUltraSonicSensor();
-//    initialiseUltraSensor();
+    initUltraSensor();
     setMotorPorts();
     setS1S2Interrupt();
     initUART();
 
+
     uPrintf("Going to Sleep\n\r");
-
-
     while (1)
     {
-//        getHCSR04DistanceFront();
+//        while(getHCSR04DistanceFront()<= MIN_DISTANCE){
+//            startMoving();
+//            printf("Stop\n");
+//        };
 
-      PCM_gotoLPM3InterruptSafe();
+            startUltraSonicSensor();
+
+//        while(getHCSR04DistanceLeft()<= MIN_DISTANCE){
+//
+//                    printf("turn Right\n");
+//        };
+//
+//        while(getHCSR04DistanceRight()<= MIN_DISTANCE){
+//
+//                            printf("turn left\n");
+//                };
+        PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -71,14 +84,9 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-        pwmConfig1.dutyCycle =
-                (pwmConfig1.dutyCycle == 9000) ?
-                        1000 : pwmConfig1.dutyCycle + 1000;
-        pwmConfig2.dutyCycle =
-                (pwmConfig2.dutyCycle == 9000) ?
-                        1000 : pwmConfig2.dutyCycle + 1000;
+        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000) ? 1000 : pwmConfig1.dutyCycle + 1000;
+        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000) ? 1000 : pwmConfig2.dutyCycle + 1000;
     }
-
 
     generatePWN();
 }
@@ -89,43 +97,42 @@ void EUSCIA0_IRQHandler(void)
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
     msg = UART_receiveData(EUSCI_A0_BASE);
+
     //indicate that something was received
     GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
 
     switch (msg)
     {
-    case FORWARD:
-        GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
-
-
-        uPrintf("forward\n\r");
-        break;
-    case LEFT:
-        uPrintf("left\n\r");
-        break;
-    case RIGHT:
-        uPrintf("right\n\r");
-        break;
-    case BACK:
-        uPrintf("back\n\r");
-        break;
-    case ONLED2:
-        uPrintf("on\n\r");
-        GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
-        break;
-    case OFFLED2:
-        uPrintf("off\n\r");
-        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
-        break;
-    case ONREDLED:
-        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
-        break;
-    case OFFREDLED:
-        GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
-        break;
-    default:
-        UART_transmitData(EUSCI_A0_BASE, msg);
+        case FORWARD:
+            uPrintf("forward\n\r");
+            break;
+        case LEFT:
+            uPrintf("left\n\r");
+            break;
+        case RIGHT:
+            uPrintf("right\n\r");
+            break;
+        case BACK:
+            uPrintf("back\n\r");
+            break;
+        case ONLED2:
+            uPrintf("on\n\r");
+            GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
+            break;
+        case OFFLED2:
+            uPrintf("off\n\r");
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
+            break;
+        case ONREDLED:
+            uPrintf("onr\n\r");
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            break;
+        case OFFREDLED:
+            uPrintf("offr\n\r");
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            break;
+        default:
+            UART_transmitData(EUSCI_A0_BASE, msg);
     }
-
 }
 
