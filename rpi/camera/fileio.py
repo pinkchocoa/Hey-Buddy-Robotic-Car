@@ -75,8 +75,7 @@ def set_to_file(links, file_name):
     @param links a set of data to be entered into the file
     @param file_name file name
     """
-    with open(file_name, "w", encoding="utf-8") as f: #added encoding for UnicodeEncodeError 
-        for l in sorted(links):
-            url = l.replace(" ","") # remove spaces
-            f.write(l+"\n")
+    with open(file_name, "w", encoding="utf-8") as f: #added encoding for UnicodeEncodeError
+        for l in links:
+            f.write(str(l)+"\n")
 

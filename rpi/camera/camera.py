@@ -2,14 +2,8 @@ import cv2
 import numpy as np 
 from picamera.array import PiRGBArray
 from picamera import PiCamera 
+from fileio import set_to_file
 
-def nothing(x):
-    pass
- 
-# cv2.namedWindow("Trackbars")
-# cv2.createTrackbar("B", "Trackbars", 0, 255, nothing)
-# cv2.createTrackbar("G", "Trackbars", 0, 255, nothing)
-# cv2.createTrackbar("R", "Trackbars", 0, 255, nothing)
 
 camera = PiCamera()
 camera.resolution = (640, 480)
@@ -31,16 +25,19 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	upperLimit = np.uint8([hsvGreen[0][0][0]+10,255,255])
 
 	mask = cv2.inRange(hsv, lowerLimit, upperLimit)
+	
 
 	coord = cv2.findNonZero(mask)
-	
-	print(coord)
+	if coord is not None:
+		print(len(coord))
+		print(coord[int(len(coord)/2)][0][0])
+		set_to_file([len(coord), coord[int(len(coord)/2)][0][0]], "test.txt")
 
 	result = cv2.bitwise_and(image	, image	, mask=mask)
 
-	#cv2.imshow("frame", image)
-	#cv2.imshow("mask", mask)
-	#cv2.imshow("result", result)
+	# cv2.imshow("frame", image)
+	# cv2.imshow("mask", mask)
+	cv2.imshow("result", result)
 
 	key = cv2.waitKey(1)
 	rawCapture.truncate(0)
