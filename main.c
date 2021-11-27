@@ -47,17 +47,22 @@ int main(void)
 
     //startUltrasonicSensor();
     setMotorPorts();
-    startMoving();
+
     setS1S2Interrupt();
     initUART();
-    generatePWN();
     
 
+
     uPrintf("Going to Sleep\n\r");
+
+    startMoving();
+    generatePWN();
+    PORT6_IRQHandler();
+    PORT5_IRQHandler();
     while (1)
     {
-       // PCM_gotoLPM3InterruptSafe();
-        MoveRight();
+       PCM_gotoLPM3InterruptSafe();
+
     }
 }
 

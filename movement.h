@@ -89,7 +89,8 @@ void startMoving(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+
 }
 
 void changeDirection(){
@@ -162,6 +163,8 @@ void PORT5_IRQHandler(void)
 void MoveLeft(void){
     pwmConfig1.dutyCycle = 3000;
     pwmConfig2.dutyCycle = 8000;
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
     //Moveforward();
 }
 
@@ -170,7 +173,5 @@ void MoveRight(void){
     pwmConfig2.dutyCycle = 3000;
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
-    printf("testing");
-    //Moveforward();
 }
 
