@@ -45,7 +45,7 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
 
-    startUltrasonicSensor();
+    //startUltrasonicSensor();
     setMotorPorts();
     startMoving();
     setS1S2Interrupt();
@@ -79,12 +79,12 @@ void PORT1_IRQHandler(void)
     generatePWN();
 }
 
-void EUSCIA2_IRQHandler(void)
+void EUSCIA0_IRQHandler(void)
 {
-    uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A2_BASE);
-    MAP_UART_clearInterruptFlag(EUSCI_A2_BASE, status);
+    uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A0_BASE);
+    MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
-    msg = UART_receiveData(EUSCI_A2_BASE);
+    msg = UART_receiveData(EUSCI_A0_BASE);
     //indicate that something was received
     GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0); 
     
@@ -111,7 +111,7 @@ void EUSCIA2_IRQHandler(void)
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         default:
-            UART_transmitData(EUSCI_A2_BASE, msg);
+            UART_transmitData(EUSCI_A0_BASE, msg);
     }
     
 }

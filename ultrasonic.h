@@ -58,8 +58,7 @@ float LeftCalculateDistance;
 static void Delay(int loop)
 {
     volatile int i;
-    for (i = 0; i < loop; i++)
-        ;
+    for (i = 0; i < loop; i++);
 }
 
 // ------------------------------------------------------Configure Ultrasonice sensors -------------------------------------------------------------
@@ -67,14 +66,15 @@ void Initialise_HCSR04(void)
 {
     /* Timer_A UpMode Configuration */
     // 1/1000000 x 1000 = 1ms
-    const Timer_A_UpModeConfig upConfig = {
-    TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
+    const Timer_A_UpModeConfig upConfig =
+    {
+            TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
             TIMER_A_CLOCKSOURCE_DIVIDER_3,          // SMCLK/3 = 1MHz
             TICKPERIOD,                             // 1000 tick period
             TIMER_A_TAIE_INTERRUPT_DISABLE,         // Disable Timer interrupt
             TIMER_A_CCIE_CCR0_INTERRUPT_ENABLE,     // Enable CCR0 interrupt
             TIMER_A_DO_CLEAR                        // Clear value
-            };
+    };
 
     // Configuring 5.2,3.6,5.0 as Output - trigger sensor
     GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
@@ -143,8 +143,7 @@ float getHCSR04DistanceRight(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
 
     /* Wait for positive-edge */
-    while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 0)
-        ;
+    while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 0);
 
     /* Start Timer */
     SR04IntTimesRight = 0;
@@ -152,8 +151,7 @@ float getHCSR04DistanceRight(void)
     Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
-    while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 1)
-        ;
+    while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 1);
 
     /* Stop Timer */
     Timer_A_stopTimer(TIMER_A0_BASE);
@@ -239,8 +237,7 @@ float getHCSR04DistanceFront(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
     /* Wait for positive-edge (continue until echo goes high = 1) */
-    while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 0)
-        ;
+    while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 0);
 
     /* Start Timer - echo goes high - reset global var and count number of ticks*/
     SR04IntTimesFront = 0;
@@ -248,8 +245,7 @@ float getHCSR04DistanceFront(void)
     Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
-    while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 1)
-        ;
+    while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 1);
 
     /* Stop Timer - when echo goes low*/
     Timer_A_stopTimer(TIMER_A0_BASE);
@@ -269,13 +265,15 @@ float getHCSR04DistanceFront(void)
 float startUltrasonicSensor(void)
 {
     Initialise_HCSR04();
+    setMotorPorts();
 
     while (1)
     {
         //check if there is an obstacle on the left
         if (getHCSR04DistanceFront() <= MIN_DISTANCE)
         {
-            //turn right
+            //go straight
+            startMoving();
             printf("Stop\n");
         };
 
@@ -283,6 +281,7 @@ float startUltrasonicSensor(void)
         if (getHCSR04DistanceLeft() <= MIN_DISTANCE)
         {
             //turn right
+            rotateCarRight();
             printf("Turn right now\n");
         };
 
@@ -291,7 +290,6 @@ float startUltrasonicSensor(void)
         {
             //turn left
             printf("Turn left now\n");
-
         };
 
         // checks if front, left, right encounter any obstacle
@@ -301,8 +299,8 @@ float startUltrasonicSensor(void)
             printf("Stop now\n");
             //car reverse
             printf("Reverse now\n");
-
         }
+
         else
         {
             //move straight
