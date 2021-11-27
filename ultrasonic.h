@@ -62,7 +62,7 @@ static void Delay(int loop)
 }
 
 // ------------------------------------------------------Configure Ultrasonice sensors -------------------------------------------------------------
-void Initialise_HCSR04(void)
+void initialiseUltraSensor(void)
 {
     /* Timer_A UpMode Configuration */
     // 1/1000000 x 1000 = 1ms
@@ -256,24 +256,22 @@ float getHCSR04DistanceFront(void)
     /* Calculating distance in cm */
     FrontCalculateDistance = (float) pulseduration / 58.0f;
 
-//    printf("Front Ultrasonic Distance: %.2fcm\n", calculateddistance);
+    printf("Front Ultrasonic Distance: %.2fcm\n", FrontCalculateDistance);
 
     return FrontCalculateDistance;
 }
 
 // -----------------------------------------------------main--------------------------------------------------------------
-float startUltrasonicSensor(void)
+float startUltraSonicSensor(void)
 {
-    Initialise_HCSR04();
-    setMotorPorts();
+    initialiseUltraSensor();
 
     while (1)
     {
         //check if there is an obstacle on the left
         if (getHCSR04DistanceFront() <= MIN_DISTANCE)
         {
-            //go straight
-            startMoving();
+            //stop
             printf("Stop\n");
         };
 
@@ -281,7 +279,7 @@ float startUltrasonicSensor(void)
         if (getHCSR04DistanceLeft() <= MIN_DISTANCE)
         {
             //turn right
-            rotateCarRight();
+
             printf("Turn right now\n");
         };
 
