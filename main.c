@@ -46,32 +46,24 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-//    startUltraSonicSensor();
-    initUltraSensor();
+    startUltrasonicSensor();
+//    Initialise_HCSR04();
+//    initUltraSensor();
     setMotorPorts();
     setS1S2Interrupt();
     initUART();
 
-
     uPrintf("Going to Sleep\n\r");
     while (1)
     {
-//        while(getHCSR04DistanceFront()<= MIN_DISTANCE){
-//            startMoving();
-//            printf("Stop\n");
-//        };
+//        while(1){
+//            getHCSR04DistanceFront();
+//        }
 
-            startUltraSonicSensor();
 
-//        while(getHCSR04DistanceLeft()<= MIN_DISTANCE){
-//
-//                    printf("turn Right\n");
-//        };
-//
-//        while(getHCSR04DistanceRight()<= MIN_DISTANCE){
-//
-//                            printf("turn left\n");
-//                };
+//        startUltraSonicSensor();
+
+
         PCM_gotoLPM3InterruptSafe();
     }
 }
