@@ -61,11 +61,14 @@ while(1):
                 if coord < camWidth/3 :
                     print("left")
                     sendToSerial(sPort, direction["left"])
+                    break
                 elif coord >= camWidth/3 and coord < camWidth/3*2:
                     print("middle")
                     sendToSerial(sPort, direction["middle"])
+                    break
                 elif coord <= camWidth:
                     print("right")
                     sendToSerial(sPort, direction["right"])
+                    break
                 
                 
