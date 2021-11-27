@@ -35,8 +35,8 @@ void setMotorPorts(){
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN5);
     
     //motor B
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN2);
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN2);
     
     //ENA
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN4, GPIO_PRIMARY_MODULE_FUNCTION);
@@ -85,15 +85,16 @@ void generatePWN(){
 }
 
 void startMoving(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
 }
 
 void changeDirection(){
-    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 }
@@ -119,3 +120,57 @@ bool zeroPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
     return false;
 }
+
+void PORT6_IRQHandler(void)
+{
+    //FOR RIGHT SIDE SLAVE
+    uint32_t status;
+    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
+    detectleft++;
+    if(detectleft !=0 && detectright != 0 ){
+        if(detectleft == 10){
+            ratio = detectleft/detectright;
+            pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
+            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
+            detectleft=0;
+            detectright=0;
+        }
+    }
+    GPIO_clearInterruptFlag(GPIO_PORT_P6, status);
+}
+
+void PORT5_IRQHandler(void)
+{
+    //FOR LEFTSIDE SLAVE ENCODER
+    uint32_t status;
+    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
+    detectright++;
+    if(detectleft !=0 && detectright != 0 ){
+        if(detectright == 10){
+            ratio = detectright/detectleft;
+            pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
+            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
+            detectright=0;
+            detectleft=0;
+        }
+    }
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
+}
+
+void MoveLeft(void){
+    pwmConfig1.dutyCycle = 3000;
+    pwmConfig2.dutyCycle = 8000;
+    //Moveforward();
+}
+
+void MoveRight(void){
+    pwmConfig1.dutyCycle = 8000;
+    pwmConfig2.dutyCycle = 3000;
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
+    printf("testing");
+    //Moveforward();
+}
+

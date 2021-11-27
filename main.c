@@ -56,7 +56,8 @@ int main(void)
     uPrintf("Going to Sleep\n\r");
     while (1)
     {
-        PCM_gotoLPM3InterruptSafe();
+       // PCM_gotoLPM3InterruptSafe();
+        MoveRight();
     }
 }
 
@@ -77,42 +78,7 @@ void PORT1_IRQHandler(void)
         rotating = rotating? zeroPWN() : rotateCarLeft();
     }
     generatePWN();
-}
-void PORT5_IRQHandler(void)
-{
-    //FOR LEFTSIDE SLAVE ENCODER
-    uint32_t status;
-    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
-    detectright++;
-    if(detectright == 10)
-    {
-        ratio = detectright/detectleft;
-        pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
-        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
-        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
-        detectright=0;
-        detectleft=0;
-    }
-    GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
-}
 
-
-void PORT6_IRQHandler(void)
-{
-    //FOR RIGHT SIDE SLAVE
-    uint32_t status;
-    status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
-    detectleft++;
-    if(detectleft == 10)
-    {
-        ratio = detectleft/detectright;
-        pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
-        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
-        Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
-        detectleft=0;
-        detectright=0;
-    }
-    GPIO_clearInterruptFlag(GPIO_PORT_P6, status);
 }
 
 void EUSCIA0_IRQHandler(void)
@@ -127,7 +93,6 @@ void EUSCIA0_IRQHandler(void)
     switch(msg)
     {
         case FORWARD:
-            changeDirection();
             uPrintf("forward\n\r");
             //moves the car put a pwm code here
             break;
