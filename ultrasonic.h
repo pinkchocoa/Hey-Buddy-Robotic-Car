@@ -61,7 +61,7 @@ static void Delay(int loop)
 void Initialise_HCSR04(void)
 {
     /* Timer_A UpMode Configuration Parameter */
-    const Timer_A_UpModeConfig upConfigRight = {
+    const Timer_A_UpModeConfig upConfig = {
                  TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
                  TIMER_A_CLOCKSOURCE_DIVIDER_3,          // SMCLK/3 = 1MHz
                  TICKPERIOD,                             // 1000 tick period
@@ -70,23 +70,6 @@ void Initialise_HCSR04(void)
                  TIMER_A_DO_CLEAR                        // Clear value
     };
 
-    const Timer_A_UpModeConfig upConfigLeft = {
-                 TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
-                 TIMER_A_CLOCKSOURCE_DIVIDER_3,          // SMCLK/3 = 1MHz
-                 TICKPERIOD,                             // 1000 tick period
-                 TIMER_A_TAIE_INTERRUPT_DISABLE,         // Disable Timer interrupt
-                 TIMER_A_CCIE_CCR0_INTERRUPT_ENABLE,    // Enable CCR0 interrupt
-                 TIMER_A_DO_CLEAR                        // Clear value
-    };
-
-    const Timer_A_UpModeConfig upConfigFront = {
-                 TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
-                 TIMER_A_CLOCKSOURCE_DIVIDER_3,          // SMCLK/3 = 1MHz
-                 TICKPERIOD,                             // 1000 tick period
-                 TIMER_A_TAIE_INTERRUPT_DISABLE,         // Disable Timer interrupt
-                 TIMER_A_CCIE_CCR0_INTERRUPT_ENABLE,    // Enable CCR0 interrupt
-                 TIMER_A_DO_CLEAR                        // Clear value
-    };
 
     /* Configuring 5.2,3.6,5.0 as Output - trigger sensor*/
     GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
@@ -104,15 +87,14 @@ void Initialise_HCSR04(void)
 
 
     /* Configuring Timer_A0 for Up Mode */
-    Timer_A_configureUpMode(TIMER_A1_BASE, &upConfigRight);
-    Timer_A_configureUpMode(TIMER_A1_BASE, &upConfigLeft);
-    Timer_A_configureUpMode(TIMER_A1_BASE, &upConfigFront);
+    Timer_A_configureUpMode(TIMER_A0_BASE, &upConfig);
+
 
     /* Enabling interrupts and starting the timer */
     Interrupt_enableInterrupt(INT_TA1_0);
 
     //Timer_A_stopTimer(TIMER_A0_BASE);
-    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
 }
 
 // ----------------------------------------------interruot handler---------------------------------------------------------------------
@@ -125,12 +107,9 @@ void TA1_0_IRQHandler(void)
     SR04IntTimesFront++;
 
     /* Clear interrupt flag */
-    Timer_A_clearCaptureCompareInterrupt(TIMER_A1_BASE,
+    Timer_A_clearCaptureCompareInterrupt(TIMER_A0_BASE,
                                          TIMER_A_CAPTURECOMPARE_REGISTER_0);
-    Timer_A_clearCaptureCompareInterrupt(TIMER_A1_BASE,
-                                         TIMER_A_CAPTURECOMPARE_REGISTER_1);
-    Timer_A_clearCaptureCompareInterrupt(TIMER_A1_BASE,
-                                         TIMER_A_CAPTURECOMPARE_REGISTER_2);
+
 }
 
 // ---------------------------------------------------get distance for right sensor----------------------------------------------------------------
@@ -142,10 +121,10 @@ static int getHCSR04TimeRight(void)
     pulsetime = SR04IntTimesRight * TICKPERIOD;
 
     /* Number of ticks (between 1 to 999) before the interrupt could occur  */
-    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
 
     /* Clear Timer */
-    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
 
     Delay(3000);
 
@@ -167,14 +146,14 @@ float getHCSR04DistanceRight(void)
 
     /* Start Timer */
     SR04IntTimesRight = 0;
-    Timer_A_clearTimer(TIMER_A1_BASE);
-    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 1);
 
     /* Stop Timer */
-    Timer_A_stopTimer(TIMER_A1_BASE);
+    Timer_A_stopTimer(TIMER_A0_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeRight();
@@ -195,10 +174,10 @@ static int getHCSR04TimeLeft(void)
     pulsetime = SR04IntTimesLeft * TICKPERIOD;
 
     /* Number of ticks (between 1 to 999) before the interrupt could occur  */
-    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
 
     /* Clear Timer */
-    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
 
     Delay(3000);
 
@@ -220,14 +199,14 @@ float getHCSR04DistanceLeft(void)
 
     /* Start Timer - echo goes high - reset global var and count number of ticks*/
     SR04IntTimesLeft = 0;
-    Timer_A_clearTimer(TIMER_A1_BASE);
-    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN5) == 1);
 
     /* Stop Timer - when echo goes low*/
-    Timer_A_stopTimer(TIMER_A1_BASE);
+    Timer_A_stopTimer(TIMER_A0_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeLeft();
@@ -251,10 +230,10 @@ static int getHCSR04TimeFront(void)
 
     /* Number of ticks (between 1 to 999) before the interrupt could occur  */
     //val still in counter count remaining pulse
-    pulsetime += Timer_A_getCounterValue(TIMER_A1_BASE);
+    pulsetime += Timer_A_getCounterValue(TIMER_A0_BASE);
 
     /* Clear Timer */
-    Timer_A_clearTimer(TIMER_A1_BASE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
 
     Delay(3000);
 
@@ -275,14 +254,14 @@ float getHCSR04DistanceFront(void)
 
     /* Start Timer - echo goes high - reset global var and count number of ticks*/
     SR04IntTimesFront = 0;
-    Timer_A_clearTimer(TIMER_A1_BASE);
-    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
+    Timer_A_clearTimer(TIMER_A0_BASE);
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 
     /* Detects negative-edge */
     while (GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 1);
 
     /* Stop Timer - when echo goes low*/
-    Timer_A_stopTimer(TIMER_A1_BASE);
+    Timer_A_stopTimer(TIMER_A0_BASE);
 
     /* Obtain Pulse Width in microseconds */
     pulseduration = getHCSR04TimeFront();
@@ -290,6 +269,10 @@ float getHCSR04DistanceFront(void)
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
     printf("Front Ultrasonic Distance: %.2fcm\n", calculateddistance);
+
+//    if (calculateddistance <= MIN_DISTANCE){
+//        zeroPWN();
+//    }
 
     return calculateddistance;
 }
@@ -302,9 +285,9 @@ float startUltrasonicSensor(void)
     while (1)
     {
 //        Delay(1000);
-        getHCSR04DistanceFront();
-//        getHCSR04DistanceRight();
-//        getHCSR04DistanceLeft();
+//        getHCSR04DistanceFront();
+        getHCSR04DistanceRight();
+        getHCSR04DistanceLeft();
 
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
 

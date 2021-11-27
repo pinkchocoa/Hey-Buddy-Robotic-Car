@@ -46,8 +46,8 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-    startUltrasonicSensor();
-//    Initialise_HCSR04();
+//    startUltrasonicSensor();
+    Initialise_HCSR04();
 //    initUltraSensor();
     setMotorPorts();
     setS1S2Interrupt();
@@ -56,9 +56,8 @@ int main(void)
     uPrintf("Going to Sleep\n\r");
     while (1)
     {
-//        printf("a\n");
-//        startUltrasonicSensor();
-//        PCM_gotoLPM3InterruptSafe();
+
+        PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -72,7 +71,10 @@ void PORT1_IRQHandler(void)
     {
 //        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000) ? 1000 : pwmConfig1.dutyCycle + 1000;
 //        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000) ? 1000 : pwmConfig2.dutyCycle + 1000;
-//        startUltraSonicSensor();
+        startMoving();
+        getHCSR04DistanceFront();
+
+    //bool false
     }
 
     generatePWN();

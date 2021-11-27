@@ -74,6 +74,7 @@ void startMoving(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+    // make a global variable & store the pwm
     generatePWN();
 }
 
