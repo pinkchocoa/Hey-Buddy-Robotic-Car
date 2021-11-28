@@ -5,6 +5,7 @@ int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
 
+
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
 //this is tied to P2.4
@@ -157,4 +158,26 @@ void MoveRight(void){
     pwmConfig1.dutyCycle = 8000;
     pwmConfig2.dutyCycle = 3000;
     generatePWN();
+}
+
+// this function is to store the previous config1 & config2 duty cycle and run it.
+void previousPWM(config1, config2){
+    int previousDutyCycle1 = 0;
+    int previousDutyCycle2 = 0;
+
+    //store the last duty cycle
+    previousDutyCycle1 = config1;
+    previousDutyCycle2 = config2;
+
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+
+    pwmConfig1.dutyCycle =  previousDutyCycle1;
+    pwmConfig2.dutyCycle =  previousDutyCycle2;
+
+    // make a global variable & store the pwm
+    generatePWN();
+
 }

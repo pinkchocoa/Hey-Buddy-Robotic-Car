@@ -270,9 +270,10 @@ float getHCSR04DistanceFront(void)
     calculateddistance = (float) pulseduration / 58.0f;
     printf("Front Ultrasonic Distance: %.2fcm\n", calculateddistance);
 
-//    if (calculateddistance <= MIN_DISTANCE){
-//        zeroPWN();
-//    }
+    if (calculateddistance <= MIN_DISTANCE){
+        zeroPWN();
+    }
+    else
 
     return calculateddistance;
 }
