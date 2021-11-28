@@ -17,12 +17,12 @@ gnd blue->blue
 ```
 ## Front ultrasonic
 ```bash
-vcc red->purp;e to 5v
+vcc red->purpLe to 5v
 trigger yellow to gpio3.6
 echo    orange to gpio3.7
 gnd brown->brown
 ```
-## raspberry pi serial
+## raspberry pi serial (done via USB)
 ```bash
 brown txd
 red rtx /3.3
