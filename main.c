@@ -49,8 +49,15 @@ int main(void)
     setMotorPorts();
 
     setS1S2Interrupt();
+<<<<<<< Updated upstream
+=======
+    setWheelInterupt();
+//    startMoving();
+    //communicate with pi
+>>>>>>> Stashed changes
     initUART();
     
+
 
 
     uPrintf("Going to Sleep\n\r");
