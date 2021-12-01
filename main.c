@@ -47,15 +47,17 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-
+    //ultra sensors
     initUltraSensors();
+    check=false; //condition for while loop
+    //pwm
     setMotorPorts();
+    //interrupt
     setS1S2Interrupt();
+    //communicate with pi
     initUART();
 
-    check=false;
     uPrintf("Going to Sleep\n\r");
-
 
     while (1)
     {
@@ -77,10 +79,7 @@ void PORT1_IRQHandler(void)
         // checking for boolean, it is to check and break out of the loop in the movement.h
         check=true;
         startUltraSensors();
-
     }
-
-
 }
 
 void EUSCIA0_IRQHandler(void)
