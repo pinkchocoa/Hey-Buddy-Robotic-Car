@@ -1,15 +1,22 @@
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
 =======
+=======
+>>>>>>> Stashed changes
 #include <stdio.h>
 
 float detectleft = 0.0;
 float detectright = 0.0;
+<<<<<<< Updated upstream
 float ratio =1.0;
+=======
+float ratio = 1.0;
+>>>>>>> Stashed changes
 
 //store current duty cycle
 int currDutyCycle1 = 0; //store left wheel duty cycle
@@ -87,6 +94,10 @@ void setWheelInterupt(){
     Interrupt_enableMaster();
 
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 void setS1S2Interrupt(){
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN1);
@@ -200,8 +211,13 @@ void PORT6_IRQHandler(void)
     detectleft++;
     if(detectleft !=0 && detectright != 0 ){
         if(detectleft == 40){
+<<<<<<< Updated upstream
             ratio = detectleft/ detectright;
             printf("leftratio: %f\n",ratio);
+=======
+            ratio = detectleft/detectright;
+            printf("%f\n", ratio);
+>>>>>>> Stashed changes
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -222,7 +238,11 @@ void PORT5_IRQHandler(void)
     if(detectleft !=0 && detectright != 0 ){
         if(detectright == 40){
             ratio = detectright/detectleft;
+<<<<<<< Updated upstream
             printf("rightratio: %f\n",ratio);
+=======
+            printf("%f\n", ratio);
+>>>>>>> Stashed changes
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);

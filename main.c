@@ -54,6 +54,11 @@ int main(void)
     setWheelInterupt();
 //    startMoving();
     //communicate with pi
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+    setWheelInterupt();
+//    startMoving();
 >>>>>>> Stashed changes
     initUART();
     
