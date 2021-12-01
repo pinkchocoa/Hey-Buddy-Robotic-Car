@@ -78,8 +78,8 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
 
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
     generatePWN();
 }
 
@@ -94,12 +94,9 @@ void startMoving(){
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
     currDutyCycle2 = pwmConfig2.dutyCycle;
-
     generatePWN();
 
-    printf("Left side pwm is %d" ,currDutyCycle1);
-    printf("Right side pwm is %d" ,currDutyCycle2);
-
+    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
 }
 
 
@@ -112,8 +109,7 @@ bool rotateCarLeft(){
     currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("Left side pwm is %d" ,currDutyCycle1);
-    printf("Right side pwm is %d",currDutyCycle2);
+    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return true;
 }
 
@@ -127,8 +123,7 @@ bool rotateCarRight(){
     currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("Left side pwm is %d",currDutyCycle1);
-    printf("Right side pwm is %d",currDutyCycle2);
+    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return true;
 }
 
@@ -143,15 +138,14 @@ bool zeroPWN(){
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
     currDutyCycle2 = pwmConfig2.dutyCycle;
-
     generatePWN();
 
-    printf("Left side pwm is %d",currDutyCycle1);
-    printf("Right side pwm is %d",currDutyCycle2);
+    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return false;
 }
 
-//juning code
+// ----- code not used -----
+//jin code
 void PORT6_IRQHandler(void)
 {
     //FOR RIGHT SIDE SLAVE
