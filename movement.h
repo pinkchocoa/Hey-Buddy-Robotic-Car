@@ -6,8 +6,9 @@ int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
 
-int previousDutyCycle1 = 0;
-int previousDutyCycle2 = 0;
+//store current duty cycle
+int currDutyCycle1 = 0; //store left wheel duty cycle
+int currDutyCycle2 = 0; //store right wheel duty cycle
 
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
@@ -91,13 +92,13 @@ void startMoving(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
-    previousDutyCycle1 = pwmConfig1.dutyCycle;
-    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    currDutyCycle1 = pwmConfig1.dutyCycle;
+    currDutyCycle2 = pwmConfig2.dutyCycle;
 
     generatePWN();
 
-    printf("Left side pwm is %d" ,previousDutyCycle1);
-    printf("Right side pwm is %d" ,previousDutyCycle2);
+    printf("Left side pwm is %d" ,currDutyCycle1);
+    printf("Right side pwm is %d" ,currDutyCycle2);
 
 }
 
@@ -107,12 +108,12 @@ bool rotateCarLeft(){
     pwmConfig2.dutyCycle = 3000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
-    previousDutyCycle1 = pwmConfig1.dutyCycle;
-    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    currDutyCycle1 = pwmConfig1.dutyCycle;
+    currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("Left side pwm is %d" ,previousDutyCycle1);
-    printf("Right side pwm is %d",previousDutyCycle2);
+    printf("Left side pwm is %d" ,currDutyCycle1);
+    printf("Right side pwm is %d",currDutyCycle2);
     return true;
 }
 
@@ -122,12 +123,12 @@ bool rotateCarRight(){
     pwmConfig2.dutyCycle = 6000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
-    previousDutyCycle1 = pwmConfig1.dutyCycle;
-    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    currDutyCycle1 = pwmConfig1.dutyCycle;
+    currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("Left side pwm is %d",previousDutyCycle1);
-    printf("Right side pwm is %d",previousDutyCycle2);
+    printf("Left side pwm is %d",currDutyCycle1);
+    printf("Right side pwm is %d",currDutyCycle2);
     return true;
 }
 
@@ -140,13 +141,13 @@ bool zeroPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
-    previousDutyCycle1 = pwmConfig1.dutyCycle;
-    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    currDutyCycle1 = pwmConfig1.dutyCycle;
+    currDutyCycle2 = pwmConfig2.dutyCycle;
 
     generatePWN();
 
-    printf("Left side pwm is %d",previousDutyCycle1);
-    printf("Right side pwm is %d",previousDutyCycle2);
+    printf("Left side pwm is %d",currDutyCycle1);
+    printf("Right side pwm is %d",currDutyCycle2);
     return false;
 }
 
