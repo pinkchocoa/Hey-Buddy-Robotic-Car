@@ -50,6 +50,8 @@ int SR04IntTimesRight;
 int SR04IntTimesLeft;
 int SR04IntTimesFront;
 
+bool check;
+
 // set delay in milliseconds
 static void Delay(int loop)
 {
@@ -154,7 +156,7 @@ float getHCSR04DistanceRight(void)
 
     /* Calculating distance in cm */
     RightCalculatedDistance = (float) pulseduration / 58.0f;
-    printf("Right Ultrasonic Distance: %.2fcm\n", RightCalculatedDistance);
+//    printf("Right Ultrasonic Distance: %.2fcm\n", RightCalculatedDistance);
 
     return RightCalculatedDistance;
 }
@@ -204,7 +206,7 @@ float getHCSR04DistanceLeft(void)
 
     /* Calculating distance in cm */
     LeftCalculatedDistance = (float) pulseduration / 58.0f;
-    printf("Left Ultrasonic Distance: %.2fcm\n", LeftCalculatedDistance);
+//    printf("Left Ultrasonic Distance: %.2fcm\n", LeftCalculatedDistance);
 
     return LeftCalculatedDistance;
 }
@@ -255,13 +257,7 @@ float getHCSR04DistanceFront(void)
 
     /* Calculating distance in cm */
     FrontCalculatedDistance = (float) pulseduration / 58.0f;
-    printf("Front Ultrasonic Distance: %.2fcm\n", FrontCalculatedDistance);
-
-    // reset pwm if front is less than 30 cm
-    if (FrontCalculatedDistance <= MIN_DISTANCE){
-        zeroPWN();
-    }
-    else
+//    printf("Front Ultrasonic Distance: %.2fcm\n", FrontCalculatedDistance);
 
     return FrontCalculatedDistance;
 }
@@ -269,34 +265,38 @@ float getHCSR04DistanceFront(void)
 // -----------------------------------------------------main--------------------------------------------------------------
 float startUltraSensors(void)
 {
-    initUltraSensors();
-
-    while (1)
+//    initUltraSensors();
+    while (check == true)
     {
-//        Delay(1000);
 //        getHCSR04DistanceFront();
-        getHCSR04DistanceRight();
-        getHCSR04DistanceLeft();
+//        getHCSR04DistanceRight();
+//        getHCSR04DistanceLeft();
 
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
+        //If left side have obstacle -> stop & turn right
+        if ((getHCSR04DistanceLeft() <= MIN_DISTANCE)){
+            printf("Turning right\n");
+//            zeroPWN();
+            rotateCarRight();
+        }
+        //If right side have obstacle -> stop & turn left
+        else if ((getHCSR04DistanceRight() <= MIN_DISTANCE)){
+            printf("Turning left\n");
+//            zeroPWN();
+            rotateCarLeft();
+        }
+        // If front have obstacle -> stop
+        else if ((getHCSR04DistanceFront() <= MIN_DISTANCE)){
+            printf("Stopping\n");
+            zeroPWN();
+        }
+        // move straight
+        else{
+            printf("Going straight\n");
+            startMoving();
+        }
 
-//        if ((getHCSR04DistanceLeft() <= MIN_DISTANCE)){
-//            printf("Turn right\n");
-//        }
-//
-//        if ((getHCSR04DistanceRight() <= MIN_DISTANCE)){
-//            printf("Turn left\n");
-//
-//        }
-//        if ((getHCSR04DistanceFront() <= MIN_DISTANCE)){
-//            printf("Stop\n");
-//            printf("Reverse\n");
-//
-//        }
-//        else{
-//            printf("Go straight\n");
-//
-//        }
+
 
     }
 }

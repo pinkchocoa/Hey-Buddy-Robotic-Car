@@ -37,6 +37,7 @@
 #define ONREDLED '3'
 #define OFFREDLED '4'
 
+
 int main(void)
 {
     /* Halting the watchdog */
@@ -46,17 +47,19 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 
-//    startUltraSensors();
+
     initUltraSensors();
     setMotorPorts();
     setS1S2Interrupt();
     initUART();
 
+    check=false;
     uPrintf("Going to Sleep\n\r");
+
+
     while (1)
     {
-
-        PCM_gotoLPM3InterruptSafe();
+//        PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -70,12 +73,14 @@ void PORT1_IRQHandler(void)
     {
 //        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000) ? 1000 : pwmConfig1.dutyCycle + 1000;
 //        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000) ? 1000 : pwmConfig2.dutyCycle + 1000;
-        startMoving();
-        getHCSR04DistanceFront();
+
+        // checking for boolean, it is to check and break out of the loop in the movement.h
+        check=true;
+        startUltraSensors();
 
     }
 
-    generatePWN();
+
 }
 
 void EUSCIA0_IRQHandler(void)

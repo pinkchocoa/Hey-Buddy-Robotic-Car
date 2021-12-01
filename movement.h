@@ -1,10 +1,13 @@
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include <stdio.h>
 
 int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
 
+int previousDutyCycle1 = 0;
+int previousDutyCycle2 = 0;
 
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
@@ -69,32 +72,62 @@ void generatePWN(){
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
 }
 
-void startMoving(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
-    // make a global variable & store the pwm
-    generatePWN();
-}
-
 void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN5);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+
+    generatePWN();
 }
 
+
+void startMoving(){
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+
+    // Storing duty cycle to check pwm speed (for jin & josh PID)
+    previousDutyCycle1 = pwmConfig1.dutyCycle;
+    previousDutyCycle2 = pwmConfig2.dutyCycle;
+
+    generatePWN();
+
+    printf("Left side pwm is %d" ,previousDutyCycle1);
+    printf("Right side pwm is %d" ,previousDutyCycle2);
+
+}
+
+
 bool rotateCarLeft(){
-    pwmConfig1.dutyCycle = 1000;
-    pwmConfig2.dutyCycle = 5000;
+    pwmConfig1.dutyCycle = 6000;
+    pwmConfig2.dutyCycle = 3000;
+
+    // Storing duty cycle to check pwm speed (for jin & josh PID)
+    previousDutyCycle1 = pwmConfig1.dutyCycle;
+    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    generatePWN();
+
+    printf("Left side pwm is %d" ,previousDutyCycle1);
+    printf("Right side pwm is %d",previousDutyCycle2);
     return true;
 }
 
 bool rotateCarRight(){
-    pwmConfig2.dutyCycle = 1000;
-    pwmConfig1.dutyCycle = 5000;
+
+    pwmConfig1.dutyCycle = 3000;
+    pwmConfig2.dutyCycle = 6000;
+
+    // Storing duty cycle to check pwm speed (for jin & josh PID)
+    previousDutyCycle1 = pwmConfig1.dutyCycle;
+    previousDutyCycle2 = pwmConfig2.dutyCycle;
+    generatePWN();
+
+    printf("Left side pwm is %d",previousDutyCycle1);
+    printf("Right side pwm is %d",previousDutyCycle2);
     return true;
 }
 
@@ -105,6 +138,15 @@ bool resetPWN(){
 
 bool zeroPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
+
+    // Storing duty cycle to check pwm speed (for jin & josh PID)
+    previousDutyCycle1 = pwmConfig1.dutyCycle;
+    previousDutyCycle2 = pwmConfig2.dutyCycle;
+
+    generatePWN();
+
+    printf("Left side pwm is %d",previousDutyCycle1);
+    printf("Right side pwm is %d",previousDutyCycle2);
     return false;
 }
 
