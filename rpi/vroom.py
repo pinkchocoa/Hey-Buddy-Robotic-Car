@@ -1,4 +1,4 @@
-from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial
+from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial, sendToSerialNo
 from audio.micRec import micRec
 from camera.fileio import file_to_list
 
@@ -15,11 +15,13 @@ serialMsg = {
     "left" : "a",
     "right" : "d",
     "follow" : "followme",
+    "on led" : '3',
+    "off led": '4'
 }
 
 saidMsg = {
-    "on blue led" : ['', 'on'],
-    "off blue led" : ['', 'off'],
+    "on led" : ['', 'on'],
+    "off led" : ['', 'off'],
     "forward" : ['', 'forward'],
     "back" : ['', 'back'],
     "left" : ['', 'left'],
@@ -64,12 +66,13 @@ def heyBuddy():
     print("you said " + said)
     for key in saidMsg:
         if checkInput(said, saidMsg[key]):
+            sendToSerialNo(sPort, serialMsg['on red led'])
             if serialMsg[key] is not "followme":
-                sendToSerial(sPort, serialMsg['on red led'])
+                #sendToSerialNo(sPort, serialMsg['on red led'])
                 sendToSerial(sPort, serialMsg[key])
                 break
             elif serialMsg[key] is "followme":
-                sendToSerial(sPort, serialMsg['on red led'])
+                #sendToSerialNo(sPort, serialMsg['on red led'])
                 test = False
                 while test is False:
                     #print("follow me loop")
@@ -77,14 +80,14 @@ def heyBuddy():
                     coord = float(data[0])
                     #print(coord)
                     if coord == -1:
-                        sendToSerial(sPort, serialMsg['back'])
+                        sendToSerialNo(sPort, serialMsg['back'])
                     elif coord < camWidth/3:
                         sendToSerial(sPort, direction["left"])
                     elif coord >= camWidth/3 and coord < camWidth/3*2:
-                        sendToSerial(sPort, direction["middle"])
+                        sendToSerialNo(sPort, direction["middle"])
                     elif coord <= camWidth:
-                        sendToSerial(sPort, direction["right"])
-                    #test = loopUntilStop()
+                        sendToSerialNo(sPort, direction["right"])
+                    test = loopUntilStop()
                 if test is True:
                     break
     sendToSerial(sPort, serialMsg['off red led'])
@@ -100,7 +103,7 @@ while (1):
     print('you said: ' + said)
     if checkInput(said, ['hey', 'buddy']):
         print("hey buddy!")
-        sendToSerial(sPort, serialMsg['on blue led'])
+        sendToSerialNo(sPort, serialMsg['on blue led'])
         heyBuddy()
-        sendToSerial(sPort, serialMsg['off blue led'])
+        sendToSerialNo(sPort, serialMsg['off blue led'])
     

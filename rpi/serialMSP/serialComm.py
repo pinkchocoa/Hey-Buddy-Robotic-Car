@@ -14,9 +14,6 @@ def readFromSerial(serPort):
             print(response)
             break
         print(response)
-        time.sleep(0.5)
-
-    print("reading success")
 
 def sendToSerial(serPort, message):
     while (1):
@@ -27,9 +24,12 @@ def sendToSerial(serPort, message):
             print(response)
             break
         print(response)
-        time.sleep(0.5)
-    
-    print("transmit success")
+                   
+def sendToSerialNo(serPort, message):
+    print("attempting to transmit: " + message)
+    serPort.write(message.encode(encoding='UTF-8'))
+    response = serPort.readlines(None)
+    time.sleep(0.5)
 
 
 # uncomment for testing
