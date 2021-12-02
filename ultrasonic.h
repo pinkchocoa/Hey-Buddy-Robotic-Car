@@ -43,8 +43,8 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 #include "movement.h"
-#define MIN_DISTANCE    1.0f //30 cm
-#define LR_MIN_DISTANCE 1.0f
+#define MIN_DISTANCE    5.0f //30 cm
+#define LR_MIN_DISTANCE 8.0f
 #define TICKPERIOD      1000  // to get 1ms interrupt
 
 int SR04IntTimesRight;

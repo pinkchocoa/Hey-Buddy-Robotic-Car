@@ -148,7 +148,7 @@ void EUSCIA0_IRQHandler(void)
         case FOLLOWLEFT:
             dist = getHCSR04DistanceLeft();
             if ((dist > LR_MIN_DISTANCE)){
-                rotateCarRight();
+                rotateCarLeft();
                 uPrintf("l\n\r");
             }
             else{
@@ -160,7 +160,7 @@ void EUSCIA0_IRQHandler(void)
         case FOLLOWRIGHT:
             dist = getHCSR04DistanceRight();
             if ((dist > LR_MIN_DISTANCE)){
-                rotateCarLeft();
+                rotateCarRight();
                 uPrintf("r\n\r");
             }
             else{
