@@ -44,8 +44,6 @@
 
 
 
-
-
 int main(void)
 {
     /* Halting the watchdog */
@@ -54,6 +52,8 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0); // Configure P2.1 as output - LED2 - RED
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+
+    //moveM = moveL = moveR = false;
 
     //ultra sensors
     initUltraSensors();
@@ -95,6 +95,9 @@ void EUSCIA0_IRQHandler(void)
     uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A0_BASE);
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
+    float dist = 0.0f;
+    unsigned char buffer[15];
+
     msg = UART_receiveData(EUSCI_A0_BASE);
 
     //indicate that something was received
@@ -103,32 +106,68 @@ void EUSCIA0_IRQHandler(void)
     switch (msg)
     {
         case FORWARD:
-            uPrintf("forward\n\r");
+            uPrintf("w\n\r");
             break;
         case LEFT:
-            uPrintf("left\n\r");
+            uPrintf("a\n\r");
             break;
         case RIGHT:
-            uPrintf("right\n\r");
+            uPrintf("d\n\r");
             break;
         case BACK:
-            uPrintf("back\n\r");
+            uPrintf("s\n\r");
             break;
         case ONLED2:
-            uPrintf("on\n\r");
+            uPrintf("1\n\r");
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         case OFFLED2:
-            uPrintf("off\n\r");
+            uPrintf("2\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         case ONREDLED:
-            uPrintf("onr\n\r");
+            uPrintf("3\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
             break;
         case OFFREDLED:
-            uPrintf("offr\n\r");
+            uPrintf("4\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            break;
+        case FOLLOWMID:
+            dist = getHCSR04DistanceFront();
+            if ((dist > MIN_DISTANCE)){
+                startMoving();
+                uPrintf("m\n\r");
+            }
+            else{
+                snprintf((char*)buffer, 10, "%f", dist);
+                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+                uPrintf(buffer);
+            }
+            break;
+        case FOLLOWLEFT:
+            dist = getHCSR04DistanceLeft();
+            if ((dist > LR_MIN_DISTANCE)){
+                rotateCarRight();
+                uPrintf("l\n\r");
+            }
+            else{
+                snprintf((char*)buffer, 10, "%f", dist);
+                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+                uPrintf(buffer);
+            }
+            break;
+        case FOLLOWRIGHT:
+            dist = getHCSR04DistanceRight();
+            if ((dist > LR_MIN_DISTANCE)){
+                rotateCarLeft();
+                uPrintf("r\n\r");
+            }
+            else{
+                snprintf((char*)buffer, 10, "%f", dist);
+                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+                uPrintf(buffer);
+            }
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);

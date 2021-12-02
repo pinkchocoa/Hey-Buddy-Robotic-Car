@@ -96,7 +96,7 @@ void startMoving(){
     currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
+    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
 }
 
 
@@ -109,7 +109,7 @@ bool rotateCarLeft(){
     currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
+    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return true;
 }
 
@@ -123,7 +123,7 @@ bool rotateCarRight(){
     currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
 
-    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
+    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return true;
 }
 
