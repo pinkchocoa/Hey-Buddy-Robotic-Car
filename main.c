@@ -115,59 +115,65 @@ void EUSCIA0_IRQHandler(void)
             uPrintf("d\n\r");
             break;
         case BACK:
-            uPrintf("s\n\r");
+            //uPrintf("s\n\r");
+            zeroPWN();
             break;
         case ONLED2:
-            uPrintf("1\n\r");
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         case OFFLED2:
-            uPrintf("2\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
         case ONREDLED:
-            uPrintf("3\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
             break;
         case OFFREDLED:
-            uPrintf("4\n\r");
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
             break;
         case FOLLOWMID:
             dist = getHCSR04DistanceFront();
             if ((dist > MIN_DISTANCE)){
                 startMoving();
-                uPrintf("m\n\r");
+                //uPrintf("m\n\r");
             }
             else{
-                snprintf((char*)buffer, 10, "%f", dist);
-                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-                uPrintf(buffer);
+                zeroPWN();
             }
+//            else{
+//                snprintf((char*)buffer, 10, "%f", dist);
+//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+//                uPrintf(buffer);
+//            }
             break;
         case FOLLOWLEFT:
             dist = getHCSR04DistanceLeft();
             if ((dist > LR_MIN_DISTANCE)){
                 rotateCarLeft();
-                uPrintf("l\n\r");
+                //uPrintf("l\n\r");
             }
             else{
-                snprintf((char*)buffer, 10, "%f", dist);
-                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-                uPrintf(buffer);
+                zeroPWN();
             }
+//            else{
+//                snprintf((char*)buffer, 10, "%f", dist);
+//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+//                uPrintf(buffer);
+//            }
             break;
         case FOLLOWRIGHT:
             dist = getHCSR04DistanceRight();
             if ((dist > LR_MIN_DISTANCE)){
                 rotateCarRight();
-                uPrintf("r\n\r");
+                //uPrintf("r\n\r");
             }
             else{
-                snprintf((char*)buffer, 10, "%f", dist);
-                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-                uPrintf(buffer);
+                zeroPWN();
             }
+//            else{
+//                snprintf((char*)buffer, 10, "%f", dist);
+//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
+//                uPrintf(buffer);
+//            }
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
