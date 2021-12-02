@@ -37,6 +37,14 @@
 #define ONREDLED '3'
 #define OFFREDLED '4'
 
+//raspberry follow
+#define FOLLOWMID 'm'
+#define FOLLOWLEFT 'l'
+#define FOLLOWRIGHT 'r'
+
+
+
+
 
 int main(void)
 {

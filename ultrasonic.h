@@ -43,7 +43,8 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 #include "movement.h"
-#define MIN_DISTANCE    30.0f //30 cm
+#define MIN_DISTANCE    20.0f //30 cm
+#define LR_MIN_DISTANCE 10.0f
 #define TICKPERIOD      1000  // to get 1ms interrupt
 
 int SR04IntTimesRight;
@@ -274,13 +275,13 @@ float startUltraSensors(void)
 
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
         //If left side have obstacle -> stop & turn right
-        if ((getHCSR04DistanceLeft() <= MIN_DISTANCE)){
+        if ((getHCSR04DistanceLeft() <= LR_MIN_DISTANCE)){
             printf("Turning right\n");
 //            zeroPWN();
             rotateCarRight();
         }
         //If right side have obstacle -> stop & turn left
-        else if ((getHCSR04DistanceRight() <= MIN_DISTANCE)){
+        else if ((getHCSR04DistanceRight() <= LR_MIN_DISTANCE)){
             printf("Turning left\n");
 //            zeroPWN();
             rotateCarLeft();
