@@ -26,7 +26,7 @@ saidMsg = {
     "back" : ['', 'back'],
     "left" : ['', 'left'],
     "right" : ['', 'right'],
-    "follow" : ['follow', 'me'],
+    "follow" : ['follow', ''],
     "stop" : ['stop', ''],
 }
 
@@ -52,7 +52,7 @@ def loopUntilStop():
     said = micRec(recordTime)
     if said is None or not said:
         return False
-    #print("you said " + said)
+    print("you said " + said)
     if checkInput(said, saidMsg["stop"]):
         print("exiting loopUntilStop")
         return True
@@ -77,20 +77,21 @@ def heyBuddy():
                 while test is False:
                     #print("follow me loop")
                     data = file_to_list(outputFile)
+                    print(data) 
                     coord = float(data[0])
                     #print(coord)
                     if coord == -1:
                         sendToSerialNo(sPort, serialMsg['back'])
                     elif coord < camWidth/3:
-                        sendToSerial(sPort, direction["left"])
+                        sendToSerialNo(sPort, direction["left"])
                     elif coord >= camWidth/3 and coord < camWidth/3*2:
                         sendToSerialNo(sPort, direction["middle"])
                     elif coord <= camWidth:
                         sendToSerialNo(sPort, direction["right"])
-                    test = loopUntilStop()
+                    #test = loopUntilStop()
                 if test is True:
                     break
-    sendToSerial(sPort, serialMsg['off red led'])
+    sendToSerialNo(sPort, serialMsg['off red led'])
                 
 sPort = initSerial()
 # readFromSerial(sPort)

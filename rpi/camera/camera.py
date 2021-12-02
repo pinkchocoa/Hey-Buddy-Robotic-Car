@@ -7,7 +7,7 @@ from fileio import list_to_file
 outputFile = "coord.txt"
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 15
+camera.framerate = 30
 
 rawCapture = PiRGBArray(camera, size=(640, 480))
 
