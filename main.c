@@ -96,7 +96,7 @@ void EUSCIA0_IRQHandler(void)
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
     float dist = 0.0f;
-    unsigned char buffer[15];
+    //unsigned char buffer[15];
 
     msg = UART_receiveData(EUSCI_A0_BASE);
 
