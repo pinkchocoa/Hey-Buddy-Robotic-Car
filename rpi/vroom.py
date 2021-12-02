@@ -2,7 +2,7 @@ from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial
 from audio.micRec import micRec
 from camera.fileio import file_to_list
 
-recordTime = 3
+recordTime = 1
 recordLong = 5
 
 serialMsg = {
@@ -46,7 +46,7 @@ def checkInput(said, inputs):
     return True
 
 def loopUntilStop():
-    print("loopUntilStop")
+    #print("loopUntilStop")
     said = micRec(recordTime)
     if said is None or not said:
         return False
@@ -72,17 +72,19 @@ def heyBuddy():
                 sendToSerial(sPort, serialMsg['on red led'])
                 test = False
                 while test is False:
-                    print("follow me loop")
+                    #print("follow me loop")
                     data = file_to_list(outputFile)
                     coord = float(data[0])
-                    print(coord)
-                    if coord < camWidth/3 :
+                    #print(coord)
+                    if coord == -1:
+                        sendToSerial(sPort, serialMsg['back'])
+                    elif coord < camWidth/3:
                         sendToSerial(sPort, direction["left"])
                     elif coord >= camWidth/3 and coord < camWidth/3*2:
                         sendToSerial(sPort, direction["middle"])
                     elif coord <= camWidth:
                         sendToSerial(sPort, direction["right"])
-                    test = loopUntilStop()
+                    #test = loopUntilStop()
                 if test is True:
                     break
     sendToSerial(sPort, serialMsg['off red led'])

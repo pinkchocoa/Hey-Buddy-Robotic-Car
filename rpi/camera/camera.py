@@ -7,7 +7,7 @@ from fileio import list_to_file
 outputFile = "coord.txt"
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 30
+camera.framerate = 15
 
 rawCapture = PiRGBArray(camera, size=(640, 480))
 
@@ -32,7 +32,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		print(len(coord))
 		print(coord[int(len(coord)/2)][0][0])
 		list_to_file([coord[int(len(coord)/2)][0][0]], outputFile)
-
+	else:
+		list_to_file([-1], outputFile)
 	result = cv2.bitwise_and(image	, image	, mask=mask)
 
 	# cv2.imshow("frame", image)

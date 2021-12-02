@@ -14,7 +14,7 @@ def readFromSerial(serPort):
             print(response)
             break
         print(response)
-        time.sleep(2)
+        time.sleep(0.5)
 
     print("reading success")
 
@@ -27,7 +27,7 @@ def sendToSerial(serPort, message):
             print(response)
             break
         print(response)
-        time.sleep(2)
+        time.sleep(0.5)
     
     print("transmit success")
 
