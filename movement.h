@@ -1,28 +1,14 @@
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-int detectleft = 0;
-int detectright = 0;
-float ratio = 1;
-=======
-=======
->>>>>>> Stashed changes
 #include <stdio.h>
 
 float detectleft = 0.0;
 float detectright = 0.0;
-<<<<<<< Updated upstream
-float ratio =1.0;
-=======
 float ratio = 1.0;
->>>>>>> Stashed changes
-
 //store current duty cycle
 int currDutyCycle1 = 0; //store left wheel duty cycle
 int currDutyCycle2 = 0; //store right wheel duty cycle
 
->>>>>>> Stashed changes
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
 //this is tied to P2.4
@@ -77,27 +63,6 @@ void setMotorPorts(){
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN5, GPIO_PRIMARY_MODULE_FUNCTION);
 }
 
-void setWheelInterupt(){
-    //declare output of encoder(inputted to msp)
-    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P6, GPIO_PIN4);
-    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P5, GPIO_PIN5);
-
-    /* Enabling interrupts and starting the watchdog timer */
-    GPIO_clearInterruptFlag(GPIO_PORT_P6, GPIO_PIN4);
-    GPIO_enableInterrupt(GPIO_PORT_P6, GPIO_PIN4);
-    GPIO_clearInterruptFlag(GPIO_PORT_P5, GPIO_PIN5);
-    GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN5);
-    Interrupt_enableInterrupt(INT_PORT5);
-    Interrupt_enableInterrupt(INT_PORT6);
-    Interrupt_enableInterrupt(INT_PORT1);
-    Interrupt_enableSleepOnIsrExit();
-    Interrupt_enableMaster();
-
-}
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 void setS1S2Interrupt(){
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN1);
@@ -144,9 +109,6 @@ void startMoving(){
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
     pwmConfig1.dutyCycle = 5000;
     pwmConfig2.dutyCycle = 5000;
-
-<<<<<<< Updated upstream
-=======
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
     currDutyCycle2 = pwmConfig2.dutyCycle;
@@ -155,7 +117,6 @@ void startMoving(){
     PORT5_IRQHandler();
 
     printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
->>>>>>> Stashed changes
 }
 
 void changeDirection(){
@@ -172,10 +133,6 @@ bool rotateCarLeft(){
 }
 
 bool rotateCarRight(){
-<<<<<<< Updated upstream
-    pwmConfig2.dutyCycle = 1000;
-    pwmConfig1.dutyCycle = 5000;
-=======
 
     pwmConfig1.dutyCycle = 3000;
     pwmConfig2.dutyCycle = 6000;
@@ -188,8 +145,6 @@ bool rotateCarRight(){
     printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     BalancePWM();
 
-    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
->>>>>>> Stashed changes
     return true;
 }
 
@@ -211,13 +166,8 @@ void PORT6_IRQHandler(void)
     detectleft++;
     if(detectleft !=0 && detectright != 0 ){
         if(detectleft == 40){
-<<<<<<< Updated upstream
-            ratio = detectleft/ detectright;
-            printf("leftratio: %f\n",ratio);
-=======
             ratio = detectleft/detectright;
             printf("%f\n", ratio);
->>>>>>> Stashed changes
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -238,11 +188,7 @@ void PORT5_IRQHandler(void)
     if(detectleft !=0 && detectright != 0 ){
         if(detectright == 40){
             ratio = detectright/detectleft;
-<<<<<<< Updated upstream
-            printf("rightratio: %f\n",ratio);
-=======
             printf("%f\n", ratio);
->>>>>>> Stashed changes
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -268,8 +214,6 @@ void MoveRight(void){
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
 }
 
-<<<<<<< Updated upstream
-=======
 // this function is to store the previous config1 & config2 duty cycle and run it.
 void previousPWM(config1, config2){
     int previousDutyCycle1 = 0;
@@ -293,4 +237,3 @@ void previousPWM(config1, config2){
 }
 
 
->>>>>>> Stashed changes
