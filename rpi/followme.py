@@ -1,6 +1,8 @@
 from serialMSP.serialComm import initSerial, sendToSerialNo
 from camera.fileio import file_to_list
 
+#this file only has the followme command
+
 recordTime = 1
 recordLong = 3
 camWidth = 640

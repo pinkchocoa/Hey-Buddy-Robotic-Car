@@ -1,12 +1,13 @@
-from serialMSP.serialComm import initSerial, readFromSerial, sendToSerialNo
+from serialMSP.serialComm import initSerial, sendToSerialNo
 from audio.micRec import micRec
 from camera.fileio import file_to_list
 
-recordTime = 1
+#recordTime = 1
 recordLong = 3
 camWidth = 640
 outputFile = "coord.txt"
 
+#dictionary that contains the character to be sent to raspberry pi
 serialMsg = {
     "forward" : "w",
     "stop" : "s",
@@ -54,6 +55,7 @@ def checkInput(said, inputs):
     return True
 
 #function currently not in use
+#it causes latency that affects the follow me command
 def loopUntilStop():
     #print("loopUntilStop")
     said = micRec(recordTime)
@@ -65,6 +67,9 @@ def loopUntilStop():
         return True
     return False
 
+#after hearing activation word, 
+#it tries to hear for a valid command
+#cyan LED is on if a valid command is heard
 def heyBuddy():
     said = micRec(recordLong)
     if said is None or not said:
@@ -97,9 +102,12 @@ def heyBuddy():
                 if test is True:
                     break
     sendToSerialNo(sPort, serialMsg['off green'])
-                
+
+#init serial port to MSP
 sPort = initSerial()
 
+#hears for activation word 'hey buddy'
+#blue LED is turned on when heard
 while (1):
     said = micRec(recordLong)
     if said is None or not said:
