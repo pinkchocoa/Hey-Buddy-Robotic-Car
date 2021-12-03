@@ -67,7 +67,7 @@ int main(void)
 
     //ultra sensors
     initUltraSensors();
-    check=false; //condition for while loop
+    setWheelInterupt();
     //pwm
     setMotorPorts();
     //interrupt

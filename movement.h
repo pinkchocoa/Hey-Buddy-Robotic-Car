@@ -52,6 +52,25 @@ void setMotorPorts(){
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN5, GPIO_PRIMARY_MODULE_FUNCTION);
 }
 
+//balance pwm
+void setWheelInterupt(){
+    //declare output of encoder(inputted to msp)
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P5, GPIO_PIN5);
+
+    /* Enabling interrupts and starting the watchdog timer */
+    GPIO_clearInterruptFlag(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_enableInterrupt(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, GPIO_PIN5);
+    GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN5);
+    Interrupt_enableInterrupt(INT_PORT5);
+    Interrupt_enableInterrupt(INT_PORT6);
+
+    Interrupt_enableSleepOnIsrExit();
+    Interrupt_enableMaster();
+
+}
+
 void setS1S2Interrupt(){
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN1);
     GPIO_clearInterruptFlag(GPIO_PORT_P1, GPIO_PIN1);
@@ -90,7 +109,7 @@ void startMoving(float x){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
     if (x > MIN_DISTANCE){
-        pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
+        pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 4000;
         // Storing duty cycle to check pwm speed (for jin & josh PID)
         currDutyCycle1 = pwmConfig1.dutyCycle;
         currDutyCycle2 = pwmConfig2.dutyCycle;
@@ -107,7 +126,7 @@ void startMoving(float x){
 bool rotateCarLeft(float x){
     if (x > MIN_DISTANCE){
         pwmConfig1.dutyCycle = 3000;
-        pwmConfig2.dutyCycle = 1500;
+        pwmConfig2.dutyCycle = 2000;
 
         // Storing duty cycle to check pwm speed (for jin & josh PID)
         currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -122,8 +141,8 @@ bool rotateCarLeft(float x){
 
 bool rotateCarRight(float x){
     if (x > MIN_DISTANCE){
-    pwmConfig1.dutyCycle = 1500;
-    pwmConfig2.dutyCycle = 3000;
+    pwmConfig1.dutyCycle = 2000;
+    pwmConfig2.dutyCycle = 3500;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -162,8 +181,9 @@ void PORT6_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
     detectleft++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectleft == 10){
+        if(detectleft == 40){
             ratio = detectleft/detectright;
+            Delay(3);
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -181,8 +201,9 @@ void PORT5_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
     detectright++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectright == 10){
+        if(detectright == 40){
             ratio = detectright/detectleft;
+            Delay(3);
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
             Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
