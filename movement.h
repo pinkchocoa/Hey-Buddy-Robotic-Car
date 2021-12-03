@@ -170,12 +170,9 @@ void PORT6_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
     detectleft++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectleft == 30){
-            checkUltraSonic();
-        }
         if(detectleft == 40){
             ratio = detectleft/detectright;
-            Delay(1);
+            checkUltraSonic();
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
@@ -191,12 +188,9 @@ void PORT5_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
     detectright++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectright == 30){
-            checkUltraSonic();
-        }
         if(detectright == 40){
             ratio = detectright/detectleft;
-            Delay(1);
+            checkUltraSonic();
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
