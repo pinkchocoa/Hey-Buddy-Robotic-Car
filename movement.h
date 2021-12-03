@@ -84,37 +84,44 @@ void changeDirection(){
 }
 
 
-void startMoving(){
+void startMoving(float x){
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
+    if (x > MIN_DISTANCE){
+        pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
+        // Storing duty cycle to check pwm speed (for jin & josh PID)
+        currDutyCycle1 = pwmConfig1.dutyCycle;
+        currDutyCycle2 = pwmConfig2.dutyCycle;
+        generatePWN();
+    }
+    else zeroPWN();
 
-    // Storing duty cycle to check pwm speed (for jin & josh PID)
-    currDutyCycle1 = pwmConfig1.dutyCycle;
-    currDutyCycle2 = pwmConfig2.dutyCycle;
-    generatePWN();
+
 
     //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
 }
 
 
-bool rotateCarLeft(){
-    pwmConfig1.dutyCycle = 3000;
-    pwmConfig2.dutyCycle = 1500;
+bool rotateCarLeft(float x){
+    if (x > MIN_DISTANCE){
+        pwmConfig1.dutyCycle = 3000;
+        pwmConfig2.dutyCycle = 1500;
 
-    // Storing duty cycle to check pwm speed (for jin & josh PID)
-    currDutyCycle1 = pwmConfig1.dutyCycle;
-    currDutyCycle2 = pwmConfig2.dutyCycle;
-    generatePWN();
+        // Storing duty cycle to check pwm speed (for jin & josh PID)
+        currDutyCycle1 = pwmConfig1.dutyCycle;
+        currDutyCycle2 = pwmConfig2.dutyCycle;
+        generatePWN();
 
-    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-    return true;
+        //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
+        return true;
+    }
+    else return zeroPWN();
 }
 
-bool rotateCarRight(){
-
+bool rotateCarRight(float x){
+    if (x > MIN_DISTANCE){
     pwmConfig1.dutyCycle = 1500;
     pwmConfig2.dutyCycle = 3000;
 
@@ -125,6 +132,8 @@ bool rotateCarRight(){
 
     //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     return true;
+    }
+    else return zeroPWN();
 }
 
 bool resetPWN(){

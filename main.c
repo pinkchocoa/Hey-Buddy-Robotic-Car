@@ -116,13 +116,13 @@ void EUSCIA0_IRQHandler(void)
     switch (msg)
     {
         case FORWARD:
-            (front > MIN_DISTANCE)?startMoving():zeroPWN();
+            startMoving(front);
             break;
         case LEFT:
-            (left > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
+            rotateCarLeft(left);
             break;
         case RIGHT:
-            (right > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
+            rotateCarRight(right);
             break;
         case STOP:
             zeroPWN();
@@ -152,22 +152,13 @@ void EUSCIA0_IRQHandler(void)
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
             break;
         case FOLLOWMID:
-            if ((front > MIN_DISTANCE)){
-                startMoving();
-                //uPrintf("m\n\r");
-            }
-            else{ zeroPWN();}
-//            else{
-//                snprintf((char*)buffer, 10, "%f", dist);
-//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-//                uPrintf(buffer);
-//            }
+            startMoving(front);
             break;
         case FOLLOWLEFT:
-            (left > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
+            rotateCarLeft(left);
             break;
         case FOLLOWRIGHT:
-            (right > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
+            rotateCarRight(right);
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
