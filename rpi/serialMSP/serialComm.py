@@ -29,7 +29,7 @@ def sendToSerialNo(serPort, message):
     print("attempting to transmit: " + message)
     serPort.write(message.encode(encoding='UTF-8'))
     response = serPort.readlines(None)
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
 
 # uncomment for testing

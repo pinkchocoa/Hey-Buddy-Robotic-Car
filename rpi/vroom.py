@@ -77,8 +77,11 @@ def heyBuddy():
                 while test is False:
                     #print("follow me loop")
                     data = file_to_list(outputFile)
-                    print(data) 
-                    coord = float(data[0])
+                    #print(data) 
+                    try:
+                        coord = float(data[0])
+                    except:
+                        coord = -1
                     #print(coord)
                     if coord == -1:
                         sendToSerialNo(sPort, serialMsg['back'])
