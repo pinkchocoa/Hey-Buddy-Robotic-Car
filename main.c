@@ -56,8 +56,6 @@ int main(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
 
-
-    //ultra sensors
     initUltraSensors();
     setWheelInterupt();
     setMotorPorts();
@@ -80,9 +78,7 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-//        check=true;
-//        startUltraSensors();
-
+        changeDirection();
     }
 }
 
@@ -91,12 +87,8 @@ void EUSCIA0_IRQHandler(void)
     uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A0_BASE);
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
-    //unsigned char buffer[15];
 
     msg = UART_receiveData(EUSCI_A0_BASE);
-
-    //indicate that something was received
-    //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
 
     switch (msg)
     {
