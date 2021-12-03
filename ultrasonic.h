@@ -158,7 +158,6 @@ float getHCSR04DistanceRight(void)
 
     /* Calculating distance in cm */
     RightCalculatedDistance = (float) pulseduration / 58.0f;
-//    printf("Right Ultrasonic Distance: %.2fcm\n", RightCalculatedDistance);
 
     return RightCalculatedDistance;
 }
@@ -208,7 +207,6 @@ float getHCSR04DistanceLeft(void)
 
     /* Calculating distance in cm */
     LeftCalculatedDistance = (float) pulseduration / 58.0f;
-//    printf("Left Ultrasonic Distance: %.2fcm\n", LeftCalculatedDistance);
 
     return LeftCalculatedDistance;
 }
@@ -259,7 +257,6 @@ float getHCSR04DistanceFront(void)
 
     /* Calculating distance in cm */
     FrontCalculatedDistance = (float) pulseduration / 58.0f;
-//    printf("Front Ultrasonic Distance: %.2fcm\n", FrontCalculatedDistance);
 
     return FrontCalculatedDistance;
 }

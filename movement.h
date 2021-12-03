@@ -36,6 +36,13 @@ Timer_A_PWMConfig pwmConfig2 =
 
 bool rotating = false;
 
+void setOutputOnMotor(){
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
+}
+
 void setMotorPorts(){
     //motor A
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN4);
@@ -50,6 +57,8 @@ void setMotorPorts(){
     
     //ENB
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN5, GPIO_PRIMARY_MODULE_FUNCTION);
+
+    setOutputOnMotor();
 }
 
 //balance pwm
@@ -63,6 +72,7 @@ void setWheelInterupt(){
     GPIO_enableInterrupt(GPIO_PORT_P6, GPIO_PIN4);
     GPIO_clearInterruptFlag(GPIO_PORT_P5, GPIO_PIN5);
     GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN5);
+
     Interrupt_enableInterrupt(INT_PORT5);
     Interrupt_enableInterrupt(INT_PORT6);
 
@@ -86,6 +96,8 @@ void setS1S2Interrupt(){
     Interrupt_enableMaster();
 }
 
+
+
 void generatePWN(){
     /* Configuring Timer_A to have a period of approximately 80ms and an initial duty cycle of 10% of that (1000 ticks)  */
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -104,33 +116,15 @@ void changeDirection(){
 
 void zeroPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
-
-    // Storing duty cycle to check pwm speed (for jin & josh PID)
-    currDutyCycle1 = pwmConfig1.dutyCycle;
-    currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
-
-    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-    //return false;
 }
 
 void startMoving(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
     if (getHCSR04DistanceFront() > MIN_DISTANCE){
         pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
-        // Storing duty cycle to check pwm speed (for jin & josh PID)
-        currDutyCycle1 = pwmConfig1.dutyCycle;
-        currDutyCycle2 = pwmConfig2.dutyCycle;
         generatePWN();
     }
     else zeroPWN();
-
-
-
-    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
 }
 
 
@@ -138,10 +132,6 @@ void rotateCarLeft(){
     if (getHCSR04DistanceLeft() > LR_MIN_DISTANCE){
         pwmConfig1.dutyCycle = 6000;
         pwmConfig2.dutyCycle = 4000;
-
-        // Storing duty cycle to check pwm speed (for jin & josh PID)
-        currDutyCycle1 = pwmConfig1.dutyCycle;
-        currDutyCycle2 = pwmConfig2.dutyCycle;
         generatePWN();
 
         //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
@@ -153,27 +143,12 @@ void rotateCarRight(){
     if (getHCSR04DistanceRight() > LR_MIN_DISTANCE){
     pwmConfig1.dutyCycle = 4000;
     pwmConfig2.dutyCycle = 6000;
-
-    // Storing duty cycle to check pwm speed (for jin & josh PID)
-    currDutyCycle1 = pwmConfig1.dutyCycle;
-    currDutyCycle2 = pwmConfig2.dutyCycle;
     generatePWN();
-
-    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-    //return true;
     }
     else zeroPWN();
 }
 
-void resetPWN(){
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
-    //return false;
-}
 
-
-
-// ----- code not used -----
-//jin code
 void PORT6_IRQHandler(void)
 {
     //FOR RIGHT SIDE SLAVE
@@ -214,37 +189,4 @@ void PORT5_IRQHandler(void)
     GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
 }
 
-void MoveLeft(void){
-    pwmConfig1.dutyCycle = 3000;
-    pwmConfig2.dutyCycle = 8000;
-    generatePWN();
 
-}
-
-void MoveRight(void){
-    pwmConfig1.dutyCycle = 8000;
-    pwmConfig2.dutyCycle = 3000;
-    generatePWN();
-}
-
-// this function is to store the previous config1 & config2 duty cycle and run it.
-void previousPWM(config1, config2){
-    int previousDutyCycle1 = 0;
-    int previousDutyCycle2 = 0;
-
-    //store the last duty cycle
-    previousDutyCycle1 = config1;
-    previousDutyCycle2 = config2;
-
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN4);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-
-    pwmConfig1.dutyCycle =  previousDutyCycle1;
-    pwmConfig2.dutyCycle =  previousDutyCycle2;
-
-    // make a global variable & store the pwm
-    generatePWN();
-
-}

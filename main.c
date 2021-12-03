@@ -65,11 +65,8 @@ int main(void)
     //ultra sensors
     initUltraSensors();
     setWheelInterupt();
-    //pwm
     setMotorPorts();
-    //interrupt
     setS1S2Interrupt();
-    //communicate with pi
     initUART();
 
     uPrintf("Going to Sleep\n\r");
