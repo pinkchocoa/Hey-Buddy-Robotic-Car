@@ -80,6 +80,10 @@ void PORT1_IRQHandler(void)
     {
         changeDirection();
     }
+    else if (status & GPIO_PIN4)
+    {
+        zeroPWN();
+    }
 }
 
 void EUSCIA0_IRQHandler(void)
