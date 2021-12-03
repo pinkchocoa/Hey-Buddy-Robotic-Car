@@ -2,8 +2,8 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 
-#define MIN_DISTANCE    1.0f // 5 cm
-#define LR_MIN_DISTANCE 1.0f // 8 cm
+#define MIN_DISTANCE    15.0f // 5 cm
+#define LR_MIN_DISTANCE 10.0f // 8 cm
 
 int detectleft = 0;
 int detectright = 0;
@@ -55,7 +55,24 @@ void setMotorPorts(){
     GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN5, GPIO_PRIMARY_MODULE_FUNCTION);
 }
 
+//balance pwm
+void setWheelInterupt(){
+    //declare output of encoder(inputted to msp)
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P5, GPIO_PIN5);
 
+    /* Enabling interrupts and starting the watchdog timer */
+    GPIO_clearInterruptFlag(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_enableInterrupt(GPIO_PORT_P6, GPIO_PIN4);
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, GPIO_PIN5);
+    GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN5);
+    Interrupt_enableInterrupt(INT_PORT5);
+    Interrupt_enableInterrupt(INT_PORT6);
+
+    Interrupt_enableSleepOnIsrExit();
+    Interrupt_enableMaster();
+
+}
 
 void setS1S2Interrupt(){
     GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P1, GPIO_PIN1);
