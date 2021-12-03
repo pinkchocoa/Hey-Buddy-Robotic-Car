@@ -24,7 +24,7 @@ serialMsg = {
 }
 
 saidMsg = {
-    "forward" : ['move', 'forward'],
+    "forward" : ['move', 'straight'],
     "stop" : ['', 'stop'],
     "left" : ['turn', 'left'],
     "right" : ['turn', 'right'],
