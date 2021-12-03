@@ -92,8 +92,8 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-        check=true;
-        startUltraSensors();
+//        check=true;
+//        startUltraSensors();
         front = getHCSR04DistanceFront();
         left = getHCSR04DistanceLeft();
         right = getHCSR04DistanceRight();

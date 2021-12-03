@@ -264,41 +264,41 @@ float getHCSR04DistanceFront(void)
 }
 
 // -----------------------------------------------------main--------------------------------------------------------------
-void startUltraSensors(void)
-{
-//    initUltraSensors();
-    // need another bool, if its going left then no need to check right
-    while (check == true)
-    {
-//        getHCSR04DistanceFront();
-//        getHCSR04DistanceRight();
-//        getHCSR04DistanceLeft();
-
-        /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
-        //If left side have obstacle -> stop & turn right
-        if ((getHCSR04DistanceLeft() <= LR_MIN_DISTANCE)){
-            //printf("Turning right\n");
+//void startUltraSensors(void)
+//{
+////    initUltraSensors();
+//    // need another bool, if its going left then no need to check right
+//    while (check == true)
+//    {
+////        getHCSR04DistanceFront();
+////        getHCSR04DistanceRight();
+////        getHCSR04DistanceLeft();
+//
+//        /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
+//        //If left side have obstacle -> stop & turn right
+//        if ((getHCSR04DistanceLeft() <= LR_MIN_DISTANCE)){
+//            //printf("Turning right\n");
+////            zeroPWN();
+//            rotateCarRight();
+//        }
+//        //If right side have obstacle -> stop & turn left
+//        else if ((getHCSR04DistanceRight() <= LR_MIN_DISTANCE)){
+//            //printf("Turning left\n");
+////            zeroPWN();
+//            rotateCarLeft();
+//        }
+//        // If front have obstacle -> stop
+//        else if ((getHCSR04DistanceFront() <= MIN_DISTANCE)){
+//            //printf("Stopping\n");
 //            zeroPWN();
-            rotateCarRight();
-        }
-        //If right side have obstacle -> stop & turn left
-        else if ((getHCSR04DistanceRight() <= LR_MIN_DISTANCE)){
-            //printf("Turning left\n");
-//            zeroPWN();
-            rotateCarLeft();
-        }
-        // If front have obstacle -> stop
-        else if ((getHCSR04DistanceFront() <= MIN_DISTANCE)){
-            //printf("Stopping\n");
-            zeroPWN();
-        }
-        // move straight
-        else{
-            //printf("Going straight\n");
-            startMoving();
-        }
-
-
-
-    }
-}
+//        }
+//        // move straight
+//        else{
+//            //printf("Going straight\n");
+//            startMoving();
+//        }
+//
+//
+//
+//    }
+//}
