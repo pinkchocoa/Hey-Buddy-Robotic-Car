@@ -145,6 +145,23 @@ void rotateCarRight(){
     else zeroPWN();
 }
 
+void checkUltraSonic(){
+    if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
+        if (pwmConfig1.dutyCycle == pwmConfig2.dutyCycle &&
+                getHCSR04DistanceFront() <= MIN_DISTANCE) {
+            zeroPWN();
+        }
+        else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
+                getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
+            zeroPWN();
+        }
+        else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
+                getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
+            zeroPWN();
+        }
+    }
+}
+
 
 void PORT6_IRQHandler(void)
 {
@@ -153,25 +170,12 @@ void PORT6_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
     detectleft++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectleft == 20){
-            if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
-                if (pwmConfig1.dutyCycle == pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceFront() <= MIN_DISTANCE) {
-                    zeroPWN();
-                }
-                else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
-                    zeroPWN();
-                }
-                else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
-                    zeroPWN();
-                }
-            }
+        if(detectleft == 30){
+            checkUltraSonic();
         }
         if(detectleft == 40){
             ratio = detectleft/detectright;
-            Delay(3);
+            Delay(1);
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
@@ -187,25 +191,12 @@ void PORT5_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
     detectright++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectright == 20){
-            if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
-                if (pwmConfig1.dutyCycle == pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceFront() <= MIN_DISTANCE) {
-                    zeroPWN();
-                }
-                else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
-                    zeroPWN();
-                }
-                else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
-                        getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
-                    zeroPWN();
-                }
-            }
+        if(detectright == 30){
+            checkUltraSonic();
         }
         if(detectright == 40){
             ratio = detectright/detectleft;
-            Delay(3);
+            Delay(1);
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
