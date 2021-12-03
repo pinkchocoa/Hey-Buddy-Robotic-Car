@@ -157,7 +157,7 @@ void PORT6_IRQHandler(void)
             ratio = detectleft/detectright;
             Delay(3);
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
-            generatePWN()
+            generatePWN();
             detectleft=detectright=0;
         }
     }
@@ -175,7 +175,7 @@ void PORT5_IRQHandler(void)
             ratio = detectright/detectleft;
             Delay(3);
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
-            generatePWN()
+            generatePWN();
             detectleft=detectright=0;
         }
     }
