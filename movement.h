@@ -120,7 +120,7 @@ void startMoving(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
     if (getHCSR04DistanceFront() > MIN_DISTANCE){
-        pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 4000;
+        pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
         // Storing duty cycle to check pwm speed (for jin & josh PID)
         currDutyCycle1 = pwmConfig1.dutyCycle;
         currDutyCycle2 = pwmConfig2.dutyCycle;
@@ -136,8 +136,8 @@ void startMoving(){
 
 void rotateCarLeft(){
     if (getHCSR04DistanceLeft() > LR_MIN_DISTANCE){
-        pwmConfig1.dutyCycle = 3000;
-        pwmConfig2.dutyCycle = 2000;
+        pwmConfig1.dutyCycle = 6000;
+        pwmConfig2.dutyCycle = 4000;
 
         // Storing duty cycle to check pwm speed (for jin & josh PID)
         currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -151,8 +151,8 @@ void rotateCarLeft(){
 
 void rotateCarRight(){
     if (getHCSR04DistanceRight() > LR_MIN_DISTANCE){
-    pwmConfig1.dutyCycle = 2000;
-    pwmConfig2.dutyCycle = 3500;
+    pwmConfig1.dutyCycle = 4000;
+    pwmConfig2.dutyCycle = 6000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
