@@ -20,18 +20,18 @@ void uPrintf(unsigned char * TxArray)
     unsigned short i = 0;
     while(*(TxArray+i))
     {
-        UART_transmitData(EUSCI_A2_BASE, *(TxArray+i));  // Write the character at the location specified by pointer
+        UART_transmitData(EUSCI_A0_BASE, *(TxArray+i));  // Write the character at the location specified by pointer
         i++;                                             // Increment pointer to point to the next character
     }
 }
 
 void initUART()
 {
-    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P3, GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P1, GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
     CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_12);
-    UART_initModule(EUSCI_A2_BASE, &uartConfig);
-    UART_enableModule(EUSCI_A2_BASE);
-    UART_enableInterrupt(EUSCI_A2_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
+    UART_initModule(EUSCI_A0_BASE, &uartConfig);
+    UART_enableModule(EUSCI_A0_BASE);
+    UART_enableInterrupt(EUSCI_A0_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
     Interrupt_enableInterrupt(INT_EUSCIA2);
     Interrupt_enableMaster();
 }
