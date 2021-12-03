@@ -3,6 +3,8 @@ from camera.fileio import file_to_list
 
 recordTime = 1
 recordLong = 3
+camWidth = 640
+outputFile = "coord.txt"
 
 serialMsg = {
     "forward" : "w",
@@ -22,14 +24,6 @@ serialMsg = {
     "off lights" : "8",
 }
 
-camWidth = 640
-outputFile = "coord.txt"
-direction = {
-    "left" : "l",
-    "middle" : "m",
-    "right" : "r",
-}
-                
 sPort = initSerial()
 
 while (1):
@@ -41,8 +35,8 @@ while (1):
     if coord == -1:
         sendToSerialNo(sPort, serialMsg['stop'])
     elif coord < camWidth/3:
-        sendToSerialNo(sPort, direction["left"])
+        sendToSerialNo(sPort, serialMsg["left"])
     elif coord >= camWidth/3 and coord < camWidth/3*2:
-        sendToSerialNo(sPort, direction["middle"])
+        sendToSerialNo(sPort, serialMsg["forward"])
     elif coord <= camWidth:
-        sendToSerialNo(sPort, direction["right"])
+        sendToSerialNo(sPort, serialMsg["right"])

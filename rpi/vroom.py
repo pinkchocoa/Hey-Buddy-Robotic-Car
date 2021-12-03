@@ -4,6 +4,8 @@ from camera.fileio import file_to_list
 
 recordTime = 1
 recordLong = 3
+camWidth = 640
+outputFile = "coord.txt"
 
 serialMsg = {
     "forward" : "w",
@@ -40,14 +42,6 @@ saidMsg = {
     "off light" : ['off', 'light'],
     "on lights" : ['on', 'lights'],
     "off lights" : ['off', 'lights'],
-}
-
-camWidth = 640
-outputFile = "coord.txt"
-direction = {
-    "left" : "l",
-    "middle" : "m",
-    "right" : "r",
 }
 
 def checkInput(said, inputs):
@@ -94,11 +88,11 @@ def heyBuddy():
                     if coord == -1:
                         sendToSerialNo(sPort, serialMsg['stop'])
                     elif coord < camWidth/3:
-                        sendToSerialNo(sPort, direction["left"])
+                        sendToSerialNo(sPort, serialMsg["left"])
                     elif coord >= camWidth/3 and coord < camWidth/3*2:
-                        sendToSerialNo(sPort, direction["middle"])
+                        sendToSerialNo(sPort, serialMsg["forward"])
                     elif coord <= camWidth:
-                        sendToSerialNo(sPort, direction["right"])
+                        sendToSerialNo(sPort, serialMsg["right"])
                     #test = loopUntilStop()
                 if test is True:
                     break
