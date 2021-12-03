@@ -171,13 +171,7 @@ void PORT5_IRQHandler(void)
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
     detectright++;
     if(detectleft !=0 && detectright != 0 ){
-        if(detectright == 40){
-            ratio = detectright/detectleft;
-            Delay(3);
-            pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
-            generatePWN();
-            detectleft=detectright=0;
-
+        if(detectright % 10 == 0){ //check every 10 notches?
             if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
                 if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
                     zeroPWN();
@@ -191,6 +185,13 @@ void PORT5_IRQHandler(void)
                     zeroPWN();
                 }
             }
+        }
+        if(detectright == 40){
+            ratio = detectright/detectleft;
+            Delay(3);
+            pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
+            generatePWN();
+            detectleft=detectright=0;
         }
     }
 
