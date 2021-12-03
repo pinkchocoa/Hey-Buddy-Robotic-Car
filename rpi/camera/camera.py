@@ -29,10 +29,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
 	coord = cv2.findNonZero(mask)
 	if coord is not None:
-		print(len(coord))
+		#print(len(coord))
 		print(coord[int(len(coord)/2)][0][0])
 		list_to_file([coord[int(len(coord)/2)][0][0]], outputFile)
 	else:
+		print('-1')
 		list_to_file([-1], outputFile)
 	result = cv2.bitwise_and(image	, image	, mask=mask)
 

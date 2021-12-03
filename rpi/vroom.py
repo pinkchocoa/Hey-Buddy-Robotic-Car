@@ -31,7 +31,7 @@ saidMsg = {
 }
 
 camWidth = 640
-outputFile = "camera/coord.txt"
+outputFile = "coord.txt"
 direction = {
     "left" : "l",
     "middle" : "m",
