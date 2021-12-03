@@ -12,11 +12,11 @@
  *             ------------------
  *         /|\|                  |
  *          | |                  |
- *          --|RST         P1.1  |<--Toggle Switch - increase speed
- *            |            P1.4  |<--Toggle Switch - turn the car / stop the car
+ *          --|RST         P1.1  |<--Toggle Switch - change direction
  *            |                  |
- *            |            P2.4  |--> Output PWM
- *            |            P2.5  |--> Output PWN
+ *            |            P1.4  |<--Toggle Switch - stop car
+ *            |                  |
+ *            |                  |
  *            |                  |
  *
  *******************************************************************************/
@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+//define UART commands
 #define FORWARD 'w'
 #define LEFT 'a'
 #define RIGHT 'd'
@@ -56,6 +57,7 @@ int main(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
 
+    //initialization
     initUltraSensors();
     setWheelInterupt();
     setMotorPorts();
@@ -64,6 +66,7 @@ int main(void)
 
     uPrintf("Going to Sleep\n\r");
 
+    //low power mode and wait for interrupt
     while (1)
     {
         PCM_gotoLPM3InterruptSafe();
@@ -80,59 +83,62 @@ void PORT1_IRQHandler(void)
     {
         changeDirection();
     }
-    else if (status & GPIO_PIN4)
+    else if (status & GPIO_PIN4) //S2 interrupt to stop car
     {
         zeroPWN();
     }
 }
 
+//receive commands from raspberry pi through UART serial communication
 void EUSCIA0_IRQHandler(void)
 {
     uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A0_BASE);
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
 
+    //receive data from raspberry pi
     msg = UART_receiveData(EUSCI_A0_BASE);
 
+    //execute actions for the car
     switch (msg)
     {
-        case FORWARD:
+        case FORWARD: // move the car forward
             startMoving();
             break;
-        case LEFT:
+        case LEFT: //turn the car left
             rotateCarLeft();
             break;
-        case RIGHT:
+        case RIGHT:// turn the car right
             rotateCarRight();
             break;
-        case STOP:
+        case STOP: // stop the car
             zeroPWN();
             break;
-        case ONRED:
+        case ONRED: //turn on red for led 2
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
             break;
-        case OFFRED:
+        case OFFRED: //off red for led 2
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
             break;
-        case ONGREEN:
+        case ONGREEN: //turn on green for led 2
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
             break;
-        case OFFGREEN:
+        case OFFGREEN: //turn off green for led 2
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
             break;
-        case ONBLUE:
+        case ONBLUE://turn on blue for led 2
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
-        case OFFBLUE:
+        case OFFBLUE://turn off blue for led 2
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
-        case ONLED1:
+        case ONLED1: //turn on red for led 1
             GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
             break;
-        case OFFLED1:
+        case OFFLED1://turn off red for led 1
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
             break;
-        default:
+        default: //pass data back to raspberry pi
             UART_transmitData(EUSCI_A0_BASE, msg);
     }
 }
