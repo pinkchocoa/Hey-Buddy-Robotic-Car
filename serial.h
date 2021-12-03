@@ -32,6 +32,6 @@ void initUART()
     UART_initModule(EUSCI_A0_BASE, &uartConfig);
     UART_enableModule(EUSCI_A0_BASE);
     UART_enableInterrupt(EUSCI_A0_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
-    Interrupt_enableInterrupt(INT_EUSCIA2);
+    Interrupt_enableInterrupt(INT_EUSCIA0);
     Interrupt_enableMaster();
 }
