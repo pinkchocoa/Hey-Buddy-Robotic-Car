@@ -41,11 +41,6 @@
 #define ONLED1 '7'
 #define OFFLED1 '8'
 
-//raspberry follow
-#define FOLLOWMID 'm'
-#define FOLLOWLEFT 'l'
-#define FOLLOWRIGHT 'r'
-
 
 int main(void)
 {
@@ -140,15 +135,6 @@ void EUSCIA0_IRQHandler(void)
             break;
         case OFFLED1:
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-            break;
-        case FOLLOWMID:
-            startMoving();
-            break;
-        case FOLLOWLEFT:
-            rotateCarLeft();
-            break;
-        case FOLLOWRIGHT:
-            rotateCarRight();
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
