@@ -31,7 +31,7 @@
 #define FORWARD 'w'
 #define LEFT 'a'
 #define RIGHT 'd'
-#define BACK 's'
+#define STOP 's'
 
 #define ONRED '1'
 #define OFFRED '2'
@@ -111,16 +111,15 @@ void EUSCIA0_IRQHandler(void)
     switch (msg)
     {
         case FORWARD:
-            uPrintf("w\n\r");
+            (getHCSR04DistanceFront() > LR_MIN_DISTANCE)?startMoving():zeroPWN();
             break;
         case LEFT:
-            uPrintf("a\n\r");
+            (getHCSR04DistanceLeft() > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
             break;
         case RIGHT:
-            uPrintf("d\n\r");
+            (getHCSR04DistanceRight() > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
             break;
-        case BACK:
-            //uPrintf("s\n\r");
+        case STOP:
             zeroPWN();
             break;
         case ONRED:
