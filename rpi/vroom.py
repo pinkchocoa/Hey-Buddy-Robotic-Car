@@ -54,7 +54,7 @@ direction = {
 def checkInput(said, inputs):
     if said is None or not said:
         return False
-    print("You said this: " + str(said))
+    #print("You said this: " + str(said))
     for x in inputs:
         if x not in said:
             return False
@@ -75,9 +75,9 @@ def loopUntilStop():
 def heyBuddy():
     said = micRec(recordLong)
     if said is None or not said:
-        print("cannot understand ya")
+        #print("cannot understand ya")
         return
-    print("heard command: " + said)
+    #print("heard command: " + said)
     for key in saidMsg:
         if checkInput(said, saidMsg[key]):
             sendToSerialNo(sPort, serialMsg['on green'])
@@ -111,9 +111,9 @@ while (1):
     said = micRec(recordLong)
     if said is None or not said:
         continue
-    print('heard activation: ' + said)
+    #print('heard activation: ' + said)
     if checkInput(said, ['hey', 'buddy']):
-        print("hey buddy!")
+        #print("hey buddy!")
         sendToSerialNo(sPort, serialMsg['on blue'])
         heyBuddy()
         sendToSerialNo(sPort, serialMsg['off blue'])
