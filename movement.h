@@ -22,6 +22,7 @@ Timer_A_PWMConfig pwmConfig1 =
         TIMER_A_OUTPUTMODE_RESET_SET,
         1000
 };
+
 //this configs for timer A register 1
 //this is tied to P2.5
 Timer_A_PWMConfig pwmConfig2 =
@@ -33,7 +34,6 @@ Timer_A_PWMConfig pwmConfig2 =
         TIMER_A_OUTPUTMODE_RESET_SET,
         1000
 };
-
 
 void setOutputOnMotor(){
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
@@ -77,7 +77,6 @@ void setWheelInterupt(){
 
     Interrupt_enableSleepOnIsrExit();
     Interrupt_enableMaster();
-
 }
 
 void setS1S2Interrupt(){
@@ -96,7 +95,6 @@ void setS1S2Interrupt(){
 }
 
 
-
 void generatePWN(){
     /* Configuring Timer_A to have a period of approximately 80ms and an initial duty cycle of 10% of that (1000 ticks)  */
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
@@ -109,7 +107,6 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
     generatePWN();
 }
 
@@ -125,7 +122,6 @@ void startMoving(){
     }
     else zeroPWN();
 }
-
 
 void rotateCarLeft(){
     if (getHCSR04DistanceLeft() > LR_MIN_DISTANCE){
@@ -196,7 +192,6 @@ void PORT5_IRQHandler(void)
             detectleft=detectright=0;
         }
     }
-
     GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
 }
 
