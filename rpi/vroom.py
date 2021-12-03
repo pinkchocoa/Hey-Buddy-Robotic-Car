@@ -116,6 +116,6 @@ while (1):
         sendToSerialNo(sPort, serialMsg['on blue'])
         heyBuddy()
         sendToSerialNo(sPort, serialMsg['off blue'])
-    else checkInput(said, ['stop']):
+    elif checkInput(said, ['stop']):
         sendToSerialNo(sPort, serialMsg['stop'])
     
