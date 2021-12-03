@@ -26,8 +26,8 @@ serialMsg = {
 saidMsg = {
     "forward" : ['move', 'forward'],
     "stop" : ['', 'stop'],
-    "left" : ['move', 'left'],
-    "right" : ['move', 'right'],
+    "left" : ['turn', 'left'],
+    "right" : ['turn', 'right'],
     "follow" : ['follow', 'me'],
     # not allowing led2 as commands as they are used as indicators
     # "on red" : ['on', 'red'],
