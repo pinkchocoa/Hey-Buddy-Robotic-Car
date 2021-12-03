@@ -6,28 +6,37 @@ recordTime = 1
 recordLong = 5
 
 serialMsg = {
-    "on blue led" : "1",
-    "off blue led" : "2",
-    "on red led" : "3",
-    "off red led" : "4",
     "forward" : "w",
     "back" : "s",
     "left" : "a",
     "right" : "d",
     "follow" : "followme",
-    "on led" : '3',
-    "off led": '4'
+    "on red" : "1",
+    "off red" : "2",
+    "on green" : "3",
+    "off green" : "4",
+    "on blue" : "5",
+    "off blue" : "6",
+    "on light" : "7",
+    "off light" : "8",
 }
 
 saidMsg = {
-    "on led" : ['', 'on'],
-    "off led" : ['', 'off'],
     "forward" : ['', 'forward'],
     "back" : ['', 'back'],
     "left" : ['', 'left'],
     "right" : ['', 'right'],
     "follow" : ['follow', ''],
     "stop" : ['stop', ''],
+    # not allowing led2 as commands as they are used as indicators
+    # "on red" : ['on', 'red'],
+    # "off red" : ['off', 'red'],
+    # "on green" : ['on', 'green'],
+    # "off green" : ['off', 'green'],
+    # "on blue" : ['on', 'blue'],
+    # "off blue" : ['off', 'blue'],
+    "on light" : ['on', 'light'],
+    "off light" : ['off', 'light'],
 }
 
 camWidth = 640
@@ -63,26 +72,21 @@ def heyBuddy():
     if said is None or not said:
         print("cannot understand ya")
         return
-    print("you said " + said)
+    print("heard command: " + said)
     for key in saidMsg:
         if checkInput(said, saidMsg[key]):
-            sendToSerialNo(sPort, serialMsg['on red led'])
+            sendToSerialNo(sPort, serialMsg['on green'])
             if serialMsg[key] is not "followme":
-                #sendToSerialNo(sPort, serialMsg['on red led'])
-                sendToSerial(sPort, serialMsg[key])
+                sendToSerialNo(sPort, serialMsg[key])
                 break
             elif serialMsg[key] is "followme":
-                #sendToSerialNo(sPort, serialMsg['on red led'])
                 test = False
                 while test is False:
-                    #print("follow me loop")
                     data = file_to_list(outputFile)
-                    #print(data) 
                     try:
                         coord = float(data[0])
                     except:
                         coord = -1
-                    #print(coord)
                     if coord == -1:
                         sendToSerialNo(sPort, serialMsg['back'])
                     elif coord < camWidth/3:
@@ -94,20 +98,18 @@ def heyBuddy():
                     #test = loopUntilStop()
                 if test is True:
                     break
-    sendToSerialNo(sPort, serialMsg['off red led'])
+    sendToSerialNo(sPort, serialMsg['off green'])
                 
 sPort = initSerial()
-# readFromSerial(sPort)
-# ^ for going to sleep message, else not needed
+
 while (1):
-    print("waiting for activation word")
     said = micRec(recordLong)
     if said is None or not said:
         continue
-    print('you said: ' + said)
+    print('heard activation: ' + said)
     if checkInput(said, ['hey', 'buddy']):
         print("hey buddy!")
-        sendToSerialNo(sPort, serialMsg['on blue led'])
+        sendToSerialNo(sPort, serialMsg['on blue'])
         heyBuddy()
-        sendToSerialNo(sPort, serialMsg['off blue led'])
+        sendToSerialNo(sPort, serialMsg['off blue'])
     
