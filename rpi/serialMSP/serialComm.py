@@ -31,11 +31,3 @@ def sendToSerialNo(serPort, message):
     response = serPort.readlines(None)
     time.sleep(0.5)
 
-
-# uncomment for testing
-
-# ser = initSerial()
-# readFromSerial(ser)
-# sendToSerial(ser, 'w')
-# sendToSerial(ser, '1')
-# sendToSerial(ser, '2')
