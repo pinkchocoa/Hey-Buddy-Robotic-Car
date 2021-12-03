@@ -10,14 +10,10 @@ card 2: AT2020USB [AT2020USB+], device 0: USB Audio [USB Audio]
   Subdevice #0: subdevice #0
   
 2. edit the config file
-$ nano /home/pi/.asoundrc
+$ nano /etc/asound.conf
 add this portion in
-pcm.mic {
-  type plug
-  slave {
-    pcm "hw:[card number],[device number]"
-  }
-}
+defaults.pcm.card 1
+defaults.pcm.device 0
 
 3. test by recording somethng
 $ arecord --format=S16_LE --rate=16000 --file-type=wav out.wav
