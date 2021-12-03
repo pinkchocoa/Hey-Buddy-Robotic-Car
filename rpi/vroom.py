@@ -7,7 +7,7 @@ recordLong = 3
 
 serialMsg = {
     "forward" : "w",
-    "back" : "s",
+    "stop" : "s",
     "left" : "a",
     "right" : "d",
     "follow" : "followme",
@@ -24,12 +24,11 @@ serialMsg = {
 }
 
 saidMsg = {
-    "forward" : ['', 'forward'],
-    "back" : ['', 'back'],
-    "left" : ['', 'left'],
-    "right" : ['', 'right'],
-    "follow" : ['follow', ''],
-    "stop" : ['stop', ''],
+    "forward" : ['move', 'forward'],
+    "stop" : ['', 'stop'],
+    "left" : ['move', 'left'],
+    "right" : ['move', 'right'],
+    "follow" : ['follow', 'me'],
     # not allowing led2 as commands as they are used as indicators
     # "on red" : ['on', 'red'],
     # "off red" : ['off', 'red'],
@@ -93,7 +92,7 @@ def heyBuddy():
                     except:
                         coord = -1
                     if coord == -1:
-                        sendToSerialNo(sPort, serialMsg['back'])
+                        sendToSerialNo(sPort, serialMsg['stop'])
                     elif coord < camWidth/3:
                         sendToSerialNo(sPort, direction["left"])
                     elif coord >= camWidth/3 and coord < camWidth/3*2:
