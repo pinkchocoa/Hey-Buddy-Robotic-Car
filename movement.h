@@ -6,10 +6,6 @@ int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
 
-//store current duty cycle
-int currDutyCycle1 = 0; //store left wheel duty cycle
-int currDutyCycle2 = 0; //store right wheel duty cycle
-
 /* Timer_A PWM Configuration Parameter */
 //this configs for timer A register 1
 //this is tied to P2.4
