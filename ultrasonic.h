@@ -44,15 +44,13 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 
-#define MIN_DISTANCE    15.0f // 5 cm
-#define LR_MIN_DISTANCE 10.0f // 8 cm
+#define MIN_DISTANCE    15.0f
+#define LR_MIN_DISTANCE 10.0f
 #define TICKPERIOD      1000  // to get 1ms interrupt
 
 int SR04IntTimesRight;
 int SR04IntTimesLeft;
 int SR04IntTimesFront;
-
-bool check;
 
 // set delay in milliseconds
 static void Delay(int loop)
@@ -98,6 +96,7 @@ void initUltraSensors(void)
     //Timer_A_stopTimer(TIMER_A0_BASE);
     Timer_A_clearTimer(TIMER_A0_BASE);
 }
+
 //Interrupt Handler - every 1000 ticks, call ISR
 void TA1_0_IRQHandler(void)
 {
@@ -178,6 +177,7 @@ static int getHCSR04TimeLeft(void)
 
     return pulsetime;
 }
+
 float getHCSR04DistanceLeft(void)
 {
     int pulseduration = 0;
