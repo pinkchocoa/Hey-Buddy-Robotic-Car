@@ -22,10 +22,9 @@ trigger yellow to gpio3.6
 echo    orange to gpio3.7
 gnd brown->brown
 ```
-## raspberry pi serial (done via USB)
+## raspberry pi  (done via USB)
 ```bash
-brown txd
-red rtx /3.3
+raspberry pi -> re speaker mic array
 ```
 
 ## motor 
@@ -37,6 +36,7 @@ orange IN3 4.2
 yellow IN4 4.0
 grey enB 2.5
 ```
+
 ## Wheel Encoder
 ```bash
 left wheel encoder - green to 6.4
