@@ -158,7 +158,6 @@ void EUSCIA0_IRQHandler(void)
             break;
         case FOLLOWRIGHT:
             (getHCSR04DistanceRight() > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
-            else{ zeroPWN(); }
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
