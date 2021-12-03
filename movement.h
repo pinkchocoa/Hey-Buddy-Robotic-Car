@@ -179,14 +179,16 @@ void PORT5_IRQHandler(void)
             detectleft=detectright=0;
         }
     }
-    if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
-        zeroPWN();
-    }
-    else if (getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
-        zeroPWN();
-    }
-    else if (getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
-        zeroPWN();
+    if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
+        if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
+            zeroPWN();
+        }
+        else if (getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
+            zeroPWN();
+        }
+        else if (getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
+            zeroPWN();
+        }
     }
     GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
 }
