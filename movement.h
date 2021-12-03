@@ -171,7 +171,7 @@ void PORT6_IRQHandler(void)
         }
         if(detectleft == 40){
             ratio = detectleft/detectright;
-            Delay(1);
+            Delay(3);
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
@@ -205,7 +205,7 @@ void PORT5_IRQHandler(void)
         }
         if(detectright == 40){
             ratio = detectright/detectleft;
-            Delay(1);
+            Delay(3);
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
