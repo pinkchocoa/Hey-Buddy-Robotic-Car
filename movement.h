@@ -1,9 +1,6 @@
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include <stdio.h>
-
-#define MIN_DISTANCE    15.0f // 5 cm
-#define LR_MIN_DISTANCE 10.0f // 8 cm
+#include "ultrasonic.h"
 
 int detectleft = 0;
 int detectright = 0;
@@ -105,13 +102,24 @@ void changeDirection(){
     generatePWN();
 }
 
+void zeroPWN(){
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
 
-void startMoving(float x){
+    // Storing duty cycle to check pwm speed (for jin & josh PID)
+    currDutyCycle1 = pwmConfig1.dutyCycle;
+    currDutyCycle2 = pwmConfig2.dutyCycle;
+    generatePWN();
+
+    //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
+    //return false;
+}
+
+void startMoving(){
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    if (x > MIN_DISTANCE){
+    if (getHCSR04DistanceFront() > MIN_DISTANCE){
         pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 4000;
         // Storing duty cycle to check pwm speed (for jin & josh PID)
         currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -126,8 +134,8 @@ void startMoving(float x){
 }
 
 
-bool rotateCarLeft(float x){
-    if (x > MIN_DISTANCE){
+void rotateCarLeft(){
+    if (getHCSR04DistanceLeft() > MIN_DISTANCE){
         pwmConfig1.dutyCycle = 3000;
         pwmConfig2.dutyCycle = 2000;
 
@@ -137,13 +145,12 @@ bool rotateCarLeft(float x){
         generatePWN();
 
         //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-        return true;
     }
-    else return zeroPWN();
+    else zeroPWN();
 }
 
-bool rotateCarRight(float x){
-    if (x > MIN_DISTANCE){
+void rotateCarRight(){
+    if (getHCSR04DistanceRight() > MIN_DISTANCE){
     pwmConfig1.dutyCycle = 2000;
     pwmConfig2.dutyCycle = 3500;
 
@@ -153,27 +160,17 @@ bool rotateCarRight(float x){
     generatePWN();
 
     //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-    return true;
+    //return true;
     }
-    else return zeroPWN();
+    else zeroPWN();
 }
 
-bool resetPWN(){
+void resetPWN(){
     pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 1000;
-    return false;
+    //return false;
 }
 
-bool zeroPWN(){
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 0;
 
-    // Storing duty cycle to check pwm speed (for jin & josh PID)
-    currDutyCycle1 = pwmConfig1.dutyCycle;
-    currDutyCycle2 = pwmConfig2.dutyCycle;
-    generatePWN();
-
-    printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
-    return false;
-}
 
 // ----- code not used -----
 //jin code

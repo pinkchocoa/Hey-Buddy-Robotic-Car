@@ -24,7 +24,6 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "movement.h"
 #include "serial.h"
-#include "ultrasonic.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -47,7 +46,6 @@
 #define FOLLOWLEFT 'l'
 #define FOLLOWRIGHT 'r'
 
-float front, left, right;
 
 int main(void)
 {
@@ -63,7 +61,6 @@ int main(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
 
-    front = left = right = 0.0f;
 
     //ultra sensors
     initUltraSensors();
@@ -79,10 +76,6 @@ int main(void)
 
     while (1)
     {
-
-        front = getHCSR04DistanceFront();
-        left = getHCSR04DistanceLeft();
-        right = getHCSR04DistanceRight();
         PCM_gotoLPM3InterruptSafe();
     }
 }
@@ -106,7 +99,6 @@ void EUSCIA0_IRQHandler(void)
     uint32_t status = MAP_UART_getEnabledInterruptStatus(EUSCI_A0_BASE);
     MAP_UART_clearInterruptFlag(EUSCI_A0_BASE, status);
     unsigned char msg = 0;
-    float dist = 0.0f;
     //unsigned char buffer[15];
 
     msg = UART_receiveData(EUSCI_A0_BASE);
@@ -117,13 +109,13 @@ void EUSCIA0_IRQHandler(void)
     switch (msg)
     {
         case FORWARD:
-            startMoving(front);
+            startMoving();
             break;
         case LEFT:
-            rotateCarLeft(left);
+            rotateCarLeft();
             break;
         case RIGHT:
-            rotateCarRight(right);
+            rotateCarRight();
             break;
         case STOP:
             zeroPWN();
@@ -153,13 +145,13 @@ void EUSCIA0_IRQHandler(void)
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
             break;
         case FOLLOWMID:
-            startMoving(front);
+            startMoving();
             break;
         case FOLLOWLEFT:
-            rotateCarLeft(left);
+            rotateCarLeft();
             break;
         case FOLLOWRIGHT:
-            rotateCarRight(right);
+            rotateCarRight();
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
