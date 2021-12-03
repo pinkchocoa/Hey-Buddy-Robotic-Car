@@ -1,6 +1,24 @@
+/******************************************************************************
+ * Debugging log via MSP432 UART
+ *
+ * Description: To initialize UART for serial connection between MPS
+ *              and Raspberry pi in order to communicate between each other.
+ *
+ *               MSP432P401
+ *             -----------------
+ *            |                 |
+ *            |                 |
+ *       RST -|     P1.3/UCA0TXD|----> Ultrasonic
+ *            |                 |
+ *            |     P1.2/UCA0RXD|<---- Ultrasonic
+ *            |                 |
+ *
+ *******************************************************************************/
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 
+/* UART Configuration - asynchronous serial communication in which
+ *                      data format and transmission speeds are configurable*/
 const eUSCI_UART_ConfigV1 uartConfig =
 {
         EUSCI_A_UART_CLOCKSOURCE_SMCLK,                 // SMCLK Clock Source
@@ -15,6 +33,7 @@ const eUSCI_UART_ConfigV1 uartConfig =
         EUSCI_A_UART_8_BIT_LEN                          // 8 bit data length
 };
 
+//own printf for embedded system will not print on debug console
 void uPrintf(unsigned char * TxArray)
 {
     unsigned short i = 0;
@@ -25,6 +44,7 @@ void uPrintf(unsigned char * TxArray)
     }
 }
 
+//initialize UART configuration that has been set
 void initUART()
 {
     GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P1, GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
