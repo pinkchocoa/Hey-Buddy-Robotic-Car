@@ -1,12 +1,10 @@
 /*******************************************************************************
- * MSP432 Timer_A - Variable PWM
+ * MSP432 main file
  *
- * Description: In this example, the Timer_A module is used to create a precision
- * PWM with an adjustable duty cycle. The PWM initial period is 80 ms and is
- * output on P2.4. The initial duty cycle of the PWM is 10%, however when the
- * button is pressed on P1.1 the duty cycle is sequentially increased by 10%.
- * Once the duty cycle reaches 90%, the duty cycle is reset to 10% on the
- * following button press.
+ * Description: start by initializing all the sensors and motor, followed by
+ *              settings up the interrupt for switch S1,S2 and once
+ *              connected to raspberry pi, it will receive commands
+ *              and perform the actions
  *
  *                MSP432P401
  *             ------------------

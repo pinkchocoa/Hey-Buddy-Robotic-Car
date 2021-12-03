@@ -1,3 +1,27 @@
+/*******************************************************************************
+ * MSP432 movement file
+ *
+ * Description: In this example, the Timer_A module is used to create a precision
+ * PWM with an adjustable duty cycle. Initial duty cycle is at 10% and will be
+ * changed when different functions are executed. Interrupt handler for port 5 and
+ * 6 will be used to balance the car pwm when moving forward.
+ *
+ *                MSP432P401
+ *             ------------------
+ *         /|\|                  |
+ *          | |                  |
+ *          --|RST   Port 4.4,4.5|<-- motor a
+ *            |          Port 2.4 |<-- ENA
+ *            |                  |
+ *            |                  |
+ *            |      Port 4.2,4.0|<-- motor b
+ *            |         Port 2.5 |<-- ENB
+ *            |                  |
+ *            |          Port 5.5|<-- right wheels encoder
+ *            |          Port 6.4|<-- left wheel encoder
+ *            |                  |
+ *
+ *******************************************************************************/
 #pragma once
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "ultrasonic.h"
@@ -174,6 +198,8 @@ void PORT6_IRQHandler(void)
     uint32_t status;
     status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P6);
     detectleft++;
+    //if left wheel is faster than right wheel
+    //calculate ratio and set duty cycle for both wheels
     if(detectleft !=0 && detectright != 0 ){
         if(detectleft == 40){
             ratio = detectleft/detectright;
