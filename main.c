@@ -79,8 +79,11 @@ int main(void)
 
     while (1)
     {
-        PCM_gotoLPM3InterruptSafe();
 
+        front = getHCSR04DistanceFront();
+        left = getHCSR04DistanceLeft();
+        right = getHCSR04DistanceRight();
+        PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -94,9 +97,7 @@ void PORT1_IRQHandler(void)
     {
 //        check=true;
 //        startUltraSensors();
-        front = getHCSR04DistanceFront();
-        left = getHCSR04DistanceLeft();
-        right = getHCSR04DistanceRight();
+
     }
 }
 

@@ -2,6 +2,9 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <stdio.h>
 
+#define MIN_DISTANCE    15.0f // 5 cm
+#define LR_MIN_DISTANCE 10.0f // 8 cm
+
 int detectleft = 0;
 int detectright = 0;
 float ratio = 1;
