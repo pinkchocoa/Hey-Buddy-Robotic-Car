@@ -183,10 +183,12 @@ void PORT5_IRQHandler(void)
         if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
             zeroPWN();
         }
-        else if (getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
+        else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
+                getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
             zeroPWN();
         }
-        else if (getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
+        else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
+                getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
             zeroPWN();
         }
     }
