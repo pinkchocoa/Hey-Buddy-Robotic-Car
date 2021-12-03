@@ -134,7 +134,12 @@ void EUSCIA0_IRQHandler(void)
         case OFFBLUE:
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
-
+        case ONLED1:
+            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
+            break;
+        case OFFLED1:
+            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN1);
+            break;
         case FOLLOWMID:
             dist = getHCSR04DistanceFront();
             if ((dist > MIN_DISTANCE)){
