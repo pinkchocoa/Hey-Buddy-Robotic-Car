@@ -177,21 +177,23 @@ void PORT5_IRQHandler(void)
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
             generatePWN();
             detectleft=detectright=0;
+
+            if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
+                if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
+                    zeroPWN();
+                }
+                else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
+                        getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
+                    zeroPWN();
+                }
+                else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
+                        getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
+                    zeroPWN();
+                }
+            }
         }
     }
-    if (pwmConfig1.dutyCycle > 0 && pwmConfig2.dutyCycle > 0){
-        if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
-            zeroPWN();
-        }
-        else if (pwmConfig1.dutyCycle > pwmConfig2.dutyCycle &&
-                getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
-            zeroPWN();
-        }
-        else if (pwmConfig1.dutyCycle < pwmConfig2.dutyCycle &&
-                getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
-            zeroPWN();
-        }
-    }
+
     GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
 }
 
