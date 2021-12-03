@@ -3,7 +3,7 @@ from audio.micRec import micRec
 from camera.fileio import file_to_list
 
 recordTime = 1
-recordLong = 5
+recordLong = 3
 
 serialMsg = {
     "forward" : "w",
