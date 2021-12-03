@@ -47,7 +47,7 @@
 #define FOLLOWLEFT 'l'
 #define FOLLOWRIGHT 'r'
 
-
+float front, left, right;
 
 int main(void)
 {
@@ -63,6 +63,7 @@ int main(void)
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
 
+    front = left = right = 0.0f;
 
     //ultra sensors
     initUltraSensors();
@@ -79,6 +80,7 @@ int main(void)
     while (1)
     {
         PCM_gotoLPM3InterruptSafe();
+
     }
 }
 
@@ -92,6 +94,9 @@ void PORT1_IRQHandler(void)
     {
         check=true;
         startUltraSensors();
+        front = getHCSR04DistanceFront();
+        left = getHCSR04DistanceLeft();
+        right = getHCSR04DistanceRight();
     }
 }
 
@@ -111,13 +116,13 @@ void EUSCIA0_IRQHandler(void)
     switch (msg)
     {
         case FORWARD:
-            (getHCSR04DistanceFront() > LR_MIN_DISTANCE)?startMoving():zeroPWN();
+            (front > MIN_DISTANCE)?startMoving():zeroPWN();
             break;
         case LEFT:
-            (getHCSR04DistanceLeft() > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
+            (left > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
             break;
         case RIGHT:
-            (getHCSR04DistanceRight() > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
+            (right > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
             break;
         case STOP:
             zeroPWN();
@@ -147,8 +152,7 @@ void EUSCIA0_IRQHandler(void)
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
             break;
         case FOLLOWMID:
-            dist = getHCSR04DistanceFront();
-            if ((dist > MIN_DISTANCE)){
+            if ((front > MIN_DISTANCE)){
                 startMoving();
                 //uPrintf("m\n\r");
             }
@@ -160,10 +164,10 @@ void EUSCIA0_IRQHandler(void)
 //            }
             break;
         case FOLLOWLEFT:
-            (getHCSR04DistanceLeft() > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
+            (left > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
             break;
         case FOLLOWRIGHT:
-            (getHCSR04DistanceRight() > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
+            (right > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
