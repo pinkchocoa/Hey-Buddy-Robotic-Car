@@ -135,7 +135,7 @@ void startMoving(){
 
 
 void rotateCarLeft(){
-    if (getHCSR04DistanceLeft() > MIN_DISTANCE){
+    if (getHCSR04DistanceLeft() > LR_MIN_DISTANCE){
         pwmConfig1.dutyCycle = 3000;
         pwmConfig2.dutyCycle = 2000;
 
@@ -150,7 +150,7 @@ void rotateCarLeft(){
 }
 
 void rotateCarRight(){
-    if (getHCSR04DistanceRight() > MIN_DISTANCE){
+    if (getHCSR04DistanceRight() > LR_MIN_DISTANCE){
     pwmConfig1.dutyCycle = 2000;
     pwmConfig2.dutyCycle = 3500;
 
