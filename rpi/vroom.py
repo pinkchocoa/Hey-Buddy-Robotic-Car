@@ -1,4 +1,4 @@
-from serialMSP.serialComm import initSerial, readFromSerial, sendToSerial, sendToSerialNo
+from serialMSP.serialComm import initSerial, readFromSerial, sendToSerialNo
 from audio.micRec import micRec
 from camera.fileio import file_to_list
 
@@ -60,6 +60,7 @@ def checkInput(said, inputs):
             return False
     return True
 
+#function currently not in use
 def loopUntilStop():
     #print("loopUntilStop")
     said = micRec(recordTime)
