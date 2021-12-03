@@ -32,10 +32,15 @@
 #define LEFT 'a'
 #define RIGHT 'd'
 #define BACK 's'
-#define ONLED2 '1'
-#define OFFLED2 '2'
-#define ONREDLED '3'
-#define OFFREDLED '4'
+
+#define ONRED '1'
+#define OFFRED '2'
+#define ONGREEN '3'
+#define OFFGREEN '4'
+#define ONBLUE '5'
+#define OFFBLUE '6'
+#define ONLED1 '7'
+#define OFFLED1 '8'
 
 //raspberry follow
 #define FOLLOWMID 'm'
@@ -49,11 +54,8 @@ int main(void)
     /* Halting the watchdog */
     MAP_WDT_A_holdTimer();
 
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0); // Configure P2.1 as output - LED2 - RED
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2); // Configure P2.2 as output - LED2 - BLUE
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-
-    //moveM = moveL = moveR = false;
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN0); // Configure P2 LED
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0); // Configure P1 LED
 
     //ultra sensors
     initUltraSensors();
@@ -69,7 +71,7 @@ int main(void)
 
     while (1)
     {
-//        PCM_gotoLPM3InterruptSafe();
+        PCM_gotoLPM3InterruptSafe();
     }
 }
 
@@ -81,10 +83,6 @@ void PORT1_IRQHandler(void)
 
     if (status & GPIO_PIN1) //S1 interrupt progressively step up the duty cycle of the PWM on a button press
     {
-//        pwmConfig1.dutyCycle = (pwmConfig1.dutyCycle == 9000) ? 1000 : pwmConfig1.dutyCycle + 1000;
-//        pwmConfig2.dutyCycle = (pwmConfig2.dutyCycle == 9000) ? 1000 : pwmConfig2.dutyCycle + 1000;
-
-        // checking for boolean, it is to check and break out of the loop in the movement.h
         check=true;
         startUltraSensors();
     }
@@ -101,7 +99,7 @@ void EUSCIA0_IRQHandler(void)
     msg = UART_receiveData(EUSCI_A0_BASE);
 
     //indicate that something was received
-    GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+    //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
 
     switch (msg)
     {
@@ -118,27 +116,32 @@ void EUSCIA0_IRQHandler(void)
             //uPrintf("s\n\r");
             zeroPWN();
             break;
-        case ONLED2:
+        case ONRED:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            break;
+        case OFFRED:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            break;
+        case ONGREEN:
+            GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
+            break;
+        case OFFGREEN:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
+            break;
+        case ONBLUE:
             GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
-        case OFFLED2:
+        case OFFBLUE:
             GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
             break;
-        case ONREDLED:
-            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
-            break;
-        case OFFREDLED:
-            GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
-            break;
+
         case FOLLOWMID:
             dist = getHCSR04DistanceFront();
             if ((dist > MIN_DISTANCE)){
                 startMoving();
                 //uPrintf("m\n\r");
             }
-            else{
-                zeroPWN();
-            }
+            else{ zeroPWN();}
 //            else{
 //                snprintf((char*)buffer, 10, "%f", dist);
 //                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
@@ -146,34 +149,11 @@ void EUSCIA0_IRQHandler(void)
 //            }
             break;
         case FOLLOWLEFT:
-            dist = getHCSR04DistanceLeft();
-            if ((dist > LR_MIN_DISTANCE)){
-                rotateCarLeft();
-                //uPrintf("l\n\r");
-            }
-            else{
-                zeroPWN();
-            }
-//            else{
-//                snprintf((char*)buffer, 10, "%f", dist);
-//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-//                uPrintf(buffer);
-//            }
+            (getHCSR04DistanceLeft() > LR_MIN_DISTANCE)?rotateCarLeft():zeroPWN();
             break;
         case FOLLOWRIGHT:
-            dist = getHCSR04DistanceRight();
-            if ((dist > LR_MIN_DISTANCE)){
-                rotateCarRight();
-                //uPrintf("r\n\r");
-            }
-            else{
-                zeroPWN();
-            }
-//            else{
-//                snprintf((char*)buffer, 10, "%f", dist);
-//                buffer[10] = '\\'; buffer[11]='n';buffer[12]='\\';buffer[13]='r';
-//                uPrintf(buffer);
-//            }
+            (getHCSR04DistanceRight() > LR_MIN_DISTANCE)?rotateCarRight():zeroPWN();
+            else{ zeroPWN(); }
             break;
         default:
             UART_transmitData(EUSCI_A0_BASE, msg);
