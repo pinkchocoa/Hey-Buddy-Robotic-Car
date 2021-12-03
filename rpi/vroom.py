@@ -19,6 +19,8 @@ serialMsg = {
     "off blue" : "6",
     "on light" : "7",
     "off light" : "8",
+    "on lights" : "7",
+    "off lights" : "8",
 }
 
 saidMsg = {
@@ -37,6 +39,8 @@ saidMsg = {
     # "off blue" : ['off', 'blue'],
     "on light" : ['on', 'light'],
     "off light" : ['off', 'light'],
+    "on lights" : ['on', 'lights'],
+    "off lights" : ['off', 'lights'],
 }
 
 camWidth = 640
