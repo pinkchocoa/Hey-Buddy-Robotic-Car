@@ -34,7 +34,6 @@ Timer_A_PWMConfig pwmConfig2 =
         1000
 };
 
-bool rotating = false;
 
 void setOutputOnMotor(){
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN5);
@@ -133,17 +132,15 @@ void rotateCarLeft(){
         pwmConfig1.dutyCycle = 6000;
         pwmConfig2.dutyCycle = 4000;
         generatePWN();
-
-        //printf("PWM Left side: %d Right side: %d \n" ,currDutyCycle1,currDutyCycle2);
     }
     else zeroPWN();
 }
 
 void rotateCarRight(){
     if (getHCSR04DistanceRight() > LR_MIN_DISTANCE){
-    pwmConfig1.dutyCycle = 4000;
-    pwmConfig2.dutyCycle = 6000;
-    generatePWN();
+        pwmConfig1.dutyCycle = 4000;
+        pwmConfig2.dutyCycle = 6000;
+        generatePWN();
     }
     else zeroPWN();
 }
@@ -160,10 +157,8 @@ void PORT6_IRQHandler(void)
             ratio = detectleft/detectright;
             Delay(3);
             pwmConfig1.dutyCycle = pwmConfig1.dutyCycle*ratio;
-            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
-            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
-            detectleft=0;
-            detectright=0;
+            generatePWN()
+            detectleft=detectright=0;
         }
     }
     GPIO_clearInterruptFlag(GPIO_PORT_P6, status);
@@ -180,11 +175,18 @@ void PORT5_IRQHandler(void)
             ratio = detectright/detectleft;
             Delay(3);
             pwmConfig2.dutyCycle = pwmConfig2.dutyCycle*ratio;
-            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig2);
-            Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig1);
-            detectright=0;
-            detectleft=0;
+            generatePWN()
+            detectleft=detectright=0;
         }
+    }
+    if (getHCSR04DistanceFront() <= MIN_DISTANCE) {
+        zeroPWN();
+    }
+    else if (getHCSR04DistanceLeft() <= LR_MIN_DISTANCE) {
+        zeroPWN();
+    }
+    else if (getHCSR04DistanceRight() <= LR_MIN_DISTANCE) {
+        zeroPWN();
     }
     GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
 }
