@@ -22,9 +22,10 @@ trigger yellow to gpio3.6
 echo    orange to gpio3.7
 gnd brown->brown
 ```
-## raspberry pi  (done via USB)
+## raspberry pi
 ```bash
 raspberry pi -> re speaker mic array
+raspberry pi - > MSP432 via USB
 ```
 
 ## motor 
