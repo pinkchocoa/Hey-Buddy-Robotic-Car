@@ -79,7 +79,7 @@ void changeDirection(){
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_toggleOutputOnPin(GPIO_PORT_P4, GPIO_PIN2);
 
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
     generatePWN();
 }
 
@@ -89,7 +89,7 @@ void startMoving(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN4);
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN2);
-    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 5000;
+    pwmConfig1.dutyCycle = pwmConfig2.dutyCycle = 3000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -101,8 +101,8 @@ void startMoving(){
 
 
 bool rotateCarLeft(){
-    pwmConfig1.dutyCycle = 6000;
-    pwmConfig2.dutyCycle = 3000;
+    pwmConfig1.dutyCycle = 3000;
+    pwmConfig2.dutyCycle = 1500;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
@@ -115,8 +115,8 @@ bool rotateCarLeft(){
 
 bool rotateCarRight(){
 
-    pwmConfig1.dutyCycle = 3000;
-    pwmConfig2.dutyCycle = 6000;
+    pwmConfig1.dutyCycle = 1500;
+    pwmConfig2.dutyCycle = 3000;
 
     // Storing duty cycle to check pwm speed (for jin & josh PID)
     currDutyCycle1 = pwmConfig1.dutyCycle;
