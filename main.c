@@ -57,6 +57,13 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2); // Configure P2 LED
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0); // Configure P1 LED
 
+    //off all LEDs first
+    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
+
+
     //ultra sensors
     initUltraSensors();
     check=false; //condition for while loop
