@@ -2,6 +2,11 @@
 Hey Buddy is a robotic car that provides control to the user via voice activation or built in buttons.
 <br>Project demonstration https://youtu.be/RHQObHKx_kw
 
+![image](https://user-images.githubusercontent.com/46685749/190571954-c90767b4-258f-4ae5-ac3c-83f1d5685245.png)
+![image](https://user-images.githubusercontent.com/46685749/190572064-a5356cd5-33a0-4a8d-b13e-13f5ffe0a999.png)
+![image](https://user-images.githubusercontent.com/46685749/190572087-9118c413-f76c-4e45-8c6f-41c83ce6e943.png)
+
+
 # Software
 Run /rpi/vroom.py onl a raspberry pi 4 with rpi camera, connected to MSP432 via serial input
 
