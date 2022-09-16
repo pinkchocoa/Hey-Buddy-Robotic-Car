@@ -1,4 +1,8 @@
-# EmbeddedSystem
+# About
+Hey Buddy is a robotic car that provides control to the user via voice activation or built in buttons.
+Project demonstration https://youtu.be/RHQObHKx_kw
+
+# Hardware
 
 ## Right ultrasonic
 ```bash
